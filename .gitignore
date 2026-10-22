@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dev-dist/
+.env
+.env.*
+!.env.example
+!.env.production
+.wrangler/
+worker/node_modules/
+worker/.dev.vars
+test-results/
+*.log

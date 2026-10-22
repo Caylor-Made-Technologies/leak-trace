@@ -1,0 +1,21 @@
+name = "money-leak-finder-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+preview_urls = false
+# No request logging of bodies; only errors with status codes.
+observability = { enabled = true, head_sampling_rate = 1 }
+
+[vars]
+# Comma-separated list of sites allowed to call this API (your app's address).
+ALLOWED_ORIGINS = "https://money-leak-finder.andycaylor.workers.dev,https://money-leak-finder.pages.dev,http://localhost:5173,http://localhost:4173"
+MODEL = "claude-opus-5-5"
+EFFORT = "low"
+
+# 8 screenshot reads per minute per visitor (keyed by a hash of their IP).
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "4810"
+simple = { limit = 8, period = 60 }
+
+# Secret (never commit it): npx wrangler secret put AI_API_KEY

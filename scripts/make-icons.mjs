@@ -1,38 +1,40 @@
-// Renders the app icons from SVG with headless Chromium.
-// Run: node scripts/make-icons.mjs (needs Playwright installed globally)
+// Writes the logo files in brand/ and the app icons in public/icons/.
+// Run: npm run icons  (renders PNGs with headless Chromium via Playwright)
 import { createRequire } from 'node:module'
+import { writeFileSync } from 'node:fs'
+import { iconSVG, lockupSVG, markSVG } from './brand.mjs'
 const require = createRequire(import.meta.url)
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || '/opt/node22/lib/node_modules/playwright')
 
-const svg = (pad, round) => `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d8bff"/><stop offset="1" stop-color="#0f3fa8"/></linearGradient>
-    <radialGradient id="glow" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#ffffff" stop-opacity="0.25"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
-  </defs>
-  <rect width="512" height="512" rx="${round}" fill="url(#g)"/>
-  <rect width="512" height="512" rx="${round}" fill="url(#glow)"/>
-  <g transform="translate(256 256) scale(${(512 - pad * 2) / 512}) translate(-256 -256)">
-    <path d="M222 92s92 98 92 162a92 92 0 0 1-184 0c0-64 92-162 92-162z" fill="#fff"/>
-    <text x="222" y="300" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="120" fill="#1b63eb">$</text>
-    <circle cx="336" cy="336" r="70" fill="none" stroke="#fff" stroke-width="30"/>
-    <path d="M386 386 440 440" stroke="#fff" stroke-width="38" stroke-linecap="round"/>
-  </g>
-</svg>`
+const files = {
+  'brand/logo-mark.svg': markSVG(),
+  'brand/logo-mark-on-light.svg': markSVG({ dark: false }),
+  'brand/app-icon.svg': iconSVG({ radius: 112 }),
+  'brand/logo-horizontal.svg': lockupSVG({ dark: true }),
+  'brand/logo-horizontal-on-light.svg': lockupSVG({ dark: false }),
+  'public/icons/favicon.svg': iconSVG({ radius: 112, simple: true }),
+}
+for (const [f, s] of Object.entries(files)) writeFileSync(f, s)
 
-const out = [
-  ['public/icons/icon-512.png', 512, svg(40, 0)],
-  ['public/icons/icon-192.png', 192, svg(40, 0)],
-  ['public/icons/icon-maskable-512.png', 512, svg(110, 0)],
-  ['public/icons/apple-touch-icon.png', 180, svg(40, 0)],
-  ['public/icons/favicon-32.png', 32, svg(10, 110)],
+const pngs = [
+  ['public/icons/icon-512.png', 512, iconSVG()],
+  ['public/icons/icon-192.png', 192, iconSVG()],
+  ['public/icons/icon-maskable-512.png', 512, iconSVG({ scale: 0.7 })],
+  ['public/icons/apple-touch-icon.png', 180, iconSVG()],
+  ['public/icons/favicon-32.png', 32, iconSVG({ radius: 112, simple: true })],
+  ['brand/logo-mark.png', 1024, markSVG()],
+  ['brand/app-icon-1024.png', 1024, iconSVG()],
+  ['brand/logo-horizontal.png', [3000, 1024], lockupSVG({ dark: true })],
+  ['brand/logo-horizontal-on-light.png', [3000, 1024], lockupSVG({ dark: false })],
 ]
 const browser = await chromium.launch()
 const page = await browser.newPage()
-for (const [file, size, s] of out) {
-  await page.setViewportSize({ width: size, height: size })
-  await page.setContent(`<html><body style="margin:0;background:transparent">${s.replace('<svg ', `<svg width="${size}" height="${size}" `)}</body></html>`)
+for (const [file, size, svg] of pngs) {
+  const [w, h] = Array.isArray(size) ? size : [size, size]
+  await page.setViewportSize({ width: w, height: h })
+  await page.setContent(`<html><body style="margin:0;background:transparent">${svg.replace('<svg ', `<svg width="${w}" height="${h}" `)}</body></html>`)
+  await page.waitForTimeout(150)
   await page.screenshot({ path: file, omitBackground: true })
 }
 await browser.close()
-console.log('icons written')
+console.log('brand files and icons written')

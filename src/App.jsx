@@ -66,9 +66,9 @@ function Shell() {
 
       <header className="glass sticky top-0 z-30 border-b border-line safe-top">
         <div className="flex items-center gap-2.5 px-4 py-2">
-          <Logo size={38} />
+          <Logo size={42} simple />
           <div className="min-w-0 flex-1 leading-tight">
-            <h1 className="font-display text-[17px] font-extrabold tracking-tight">Money Leak Finder</h1>
+            <h1 className="font-display text-[17px] font-extrabold uppercase tracking-wide">Money Leak <span className="text-accent">Finder</span></h1>
             <p className="text-[11px] text-faint">by Caylor Made Technologies</p>
           </div>
           <IconButton label={privacy ? 'Show amounts' : 'Hide amounts'} onClick={() => { haptic(); togglePrivacy() }} aria-pressed={privacy}>

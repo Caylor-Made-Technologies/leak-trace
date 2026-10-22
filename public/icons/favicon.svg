@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>
+  <filter id="mlfGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <radialGradient id="mlfBg" cx="0.5" cy="0.38" r="0.75"><stop offset="0" stop-color="#14254a"/><stop offset="0.55" stop-color="#0d1524"/><stop offset="1" stop-color="#0B0F14"/></radialGradient>
+</defs>
+  <rect width="512" height="512" rx="112" fill="url(#mlfBg)"/>
+  <g transform="translate(256 256) scale(1.2) translate(-256 -256)"><path d="M256 58 C300.16 146.92000000000002 394 206.44 394 292 A138 138 0 0 1 118 292 C118 206.44 211.84 146.92000000000002 256 58Z" fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/><path d="M292 236 C281 220 263 214 247 215 C228 216 214 228 214 245 C214 263 230 271 256 279 C283 287 299 296 299 316 C299 335 282 347 259 347 C239 347 222 338 212 322" fill="none" stroke="#3D8BFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 186 V214 M256 348 V376" fill="none" stroke="#3D8BFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/></g></svg>

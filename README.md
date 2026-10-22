@@ -23,6 +23,20 @@ Add your pay and spending by typing it in, uploading a bank CSV, or snapping scr
 | **Privacy extras** | Hide-amounts eye button, auto-blur in the app switcher, encrypted backups |
 | **Feel** | Spring animations, swipe-to-delete with undo, confetti on wins, light haptics, dark/light mode. Everything respects the phone's Reduce Motion setting |
 
+## Logo and brand
+
+The logo follows the Caylor Made Technologies mark: a droplet drawn as parallel circuit traces (white + brand blue) with hollow solder-pad nodes, a glowing blue `$` inside, and a drip falling from the bottom. The wordmark is outlined Montserrat ExtraBold with a spaced-out second line, like the CM lockup.
+
+| File | Use |
+|---|---|
+| `brand/logo-horizontal.svg` / `.png` | Full logo on dark backgrounds |
+| `brand/logo-horizontal-on-light.svg` / `.png` | Full logo on white |
+| `brand/logo-mark.svg` / `.png`, `logo-mark-on-light.svg` | Mark only |
+| `brand/app-icon.svg`, `app-icon-1024.png` | App icon / social |
+| `public/icons/` | PWA icons, favicon (bold small-size version) |
+
+Colors: navy `#0B0F14`, brand blue `#1E6FFF` / button blue `#1B63EB`, glow blue `#3D8BFF`. Everything is generated from one source (`src/lib/brandMark.js` + `scripts/brand.mjs`): run `npm run icons` after changing it. Montserrat is embedded in the wordmark SVGs under the SIL Open Font License (`brand/Montserrat-OFL.txt`).
+
 ## Privacy and security
 
 - **Data stays on the phone** (IndexedDB). No accounts, cookies, analytics, ads or trackers.
@@ -36,7 +50,32 @@ Add your pay and spending by typing it in, uploading a bank CSV, or snapping scr
   - never logs images or results
 - **Backups** can be locked with a password (AES-256-GCM, PBKDF2-SHA256 600k rounds). Restored files are fully re-validated.
 - **App hardening:** strict Content Security Policy (no inline scripts or styles; connects only to itself and the reader), `X-Frame-Options: DENY`, HSTS, no-referrer, Permissions-Policy, frame-buster, user text never inserted as HTML, CSV export protected against spreadsheet formula injection.
-- Privacy policy and terms are in **Settings → Privacy & terms**. They're a template until an attorney reviews them.
+- Privacy policy and terms (incl. price/refunds and business contact) are in **Settings → Privacy & terms**. Before the first screenshot read there's an unchecked "18+ and I agree" box; the time you agreed is saved on the phone. The policy is a template until an attorney reviews it.
+
+## Security and legal checklist (20 points)
+
+| # | Point | How this app handles it |
+|---|---|---|
+| 1 | Privacy policy | Settings → Privacy & terms, plain English |
+| 2 | Terms | Same place; Texas law, Deaf Smith County |
+| 3 | Refund policy | Free app, nothing to refund (stated in terms) |
+| 4 | Cookie policy | Section in the privacy policy: no cookies |
+| 5 | Cookie banner | Not needed: no analytics or ad pixels |
+| 6 | Form consents | Unchecked 18+ / terms / OK-to-send box before screenshots are sent; time saved |
+| 7 | No unnecessary data | Only date, description, amount, category; never logins or full numbers |
+| 8 | Third parties listed | Cloudflare and Anthropic named in the policy; fonts bundled |
+| 9 | Dark patterns | None; delete-all is two taps + typing DELETE |
+| 10 | Hidden fees | "Free. No ads, no in-app purchases, no subscriptions." in Settings |
+| 11 | Fake reviews | No reviews or testimonials |
+| 12 | Unsupported claims | Estimates say "about"; invest rates labeled examples, not advice |
+| 13 | Alt text | Logo and images labeled; decorative art hidden from screen readers |
+| 14 | Color contrast | axe scan: 0 violations, light and dark |
+| 15 | Keyboard | Skip link, visible focus ring, focus kept inside open sheets |
+| 16 | Business details | Name, Hereford TX 79045, phone, email in Settings footer + policy |
+| 17 | Kids' data | Adults 18+, not directed at under-13s |
+| 18 | Unsubscribe | No emails sent |
+| 19 | Licensed fonts/images | Inter + Montserrat (OFL, licenses included); all art drawn in-house |
+| 20 | Data deletion | Delete-all button; 45-day response promise for requests |
 
 ## File structure
 

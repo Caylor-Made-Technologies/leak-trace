@@ -5,7 +5,8 @@ import { CameraIcon, LockIcon } from '../../components/icons.jsx'
 import { XIcon } from '../../components/ui.jsx'
 import { MAX_IMAGES, prepareImage } from '../../lib/image.js'
 import { extractFromImages, extractionEnabled } from '../../lib/extract.js'
-import { addWithoutDuplicates } from '../../db.js'
+import { addWithoutDuplicates, setSetting } from '../../db.js'
+import Policy from '../../components/Policy.jsx'
 import { useApp } from '../../state.jsx'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../lib/categories.js'
 import { categorize } from '../../lib/categorize.js'
@@ -15,7 +16,10 @@ import { isValidISO } from '../../lib/dates.js'
 const READING = ['Reading your screenshots…', 'Finding dates and amounts…', 'Hiding any account numbers…', 'Sorting money in and out…', 'Almost done…']
 
 export default function ScreenshotImport({ onDone }) {
-  const { showToast, setMonth } = useApp()
+  const { showToast, setMonth, settings } = useApp()
+  const agreedAt = settings.screenshotConsent
+  const [agree, setAgree] = useState(false)
+  const [showPolicy, setShowPolicy] = useState(false)
   const [images, setImages] = useState([]) // { id, file, url } — memory only, never saved
   const [step, setStep] = useState('pick') // pick | reading | review
   const [rows, setRows] = useState([])
@@ -61,6 +65,10 @@ export default function ScreenshotImport({ onDone }) {
   }
 
   const read = async () => {
+    if (!agreedAt) {
+      if (!agree) return setError('Please check the box to agree first.')
+      await setSetting('screenshotConsent', Date.now())
+    }
     setError('')
     setStep('reading')
     setMsg(0)
@@ -141,8 +149,19 @@ export default function ScreenshotImport({ onDone }) {
               <LockIcon size={20} className="mt-0.5 shrink-0 text-good" />
               <p>Screenshots are shrunk and stripped of location data on your phone, read once, then deleted. They’re never saved. Card and account numbers are hidden (last 4 at most).</p>
             </div>
+            {!agreedAt ? (
+              <div className="rounded-2xl border border-line bg-card p-3 text-sm">
+                <label className="flex min-h-11 items-start gap-3">
+                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-6 w-6 shrink-0 accent-[#3d8bff]" />
+                  <span>I’m 18 or older, I agree to the <button type="button" className="font-semibold text-accent underline" onClick={() => setShowPolicy((v) => !v)}>Terms and Privacy Policy</button>, and I’m OK with these screenshots being sent to be read (then deleted).</span>
+                </label>
+                {showPolicy && <div className="mt-2"><Policy startOpen /></div>}
+              </div>
+            ) : (
+              <p className="text-xs text-faint">You agreed to the terms on {new Date(agreedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.</p>
+            )}
             {error && <p role="alert" className="rounded-xl bg-bad/15 p-3 text-sm font-semibold text-bad">{error}</p>}
-            <Button className="w-full" disabled={!images.length} onClick={read}>Read {images.length || ''} screenshot{images.length === 1 ? '' : 's'}</Button>
+            <Button className="w-full" disabled={!images.length || (!agreedAt && !agree)} onClick={read}>Read {images.length || ''} screenshot{images.length === 1 ? '' : 's'}</Button>
           </motion.div>
         )}
 

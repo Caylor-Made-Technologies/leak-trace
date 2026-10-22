@@ -14,6 +14,7 @@ import { addTransactions } from '../db.js'
 import { demoTransactions } from '../lib/demo.js'
 import { formatMoney } from '../lib/money.js'
 import TxnRow from '../components/TxnRow.jsx'
+import Logo from '../components/Logo.jsx'
 
 export default function Home({ go, openAdd }) {
   const { txns, loading, month, leaks, goals, leftover, showToast } = useApp()
@@ -36,7 +37,7 @@ export default function Home({ go, openAdd }) {
     return (
       <div className="space-y-4">
         <Card className="relative overflow-hidden text-center">
-          <motion.div className="mx-auto mt-2 mb-3 text-6xl" animate={{ y: [0, -10, 0], rotate: [0, -6, 6, 0] }} transition={{ duration: 3, repeat: Infinity }} aria-hidden="true">💧</motion.div>
+          <div className="mx-auto mt-1 mb-2 flex justify-center drop-shadow-[0_10px_30px_rgba(61,139,255,0.35)]"><Logo size={132} tile={false} title="Money Leak Finder logo" /></div>
           <h2 className="font-display text-2xl font-extrabold">Find where your money slips away</h2>
           <p className="mx-auto mt-2 max-w-xs text-muted">Add your pay and spending. We'll spot the leaks and show how fast you can hit your goals.</p>
           <div className="mt-5 grid gap-2.5">

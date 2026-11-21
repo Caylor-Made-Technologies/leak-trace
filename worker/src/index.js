@@ -96,7 +96,8 @@ export default {
     const allowed = parseOrigins(env.ALLOWED_ORIGINS)
     const cors = allowed.includes(origin) ? corsHeaders(origin) : {}
 
-    if (url.pathname === '/health') return json(200, { ok: true })
+    // reader: whether screenshot reading is switched on (a key is configured). Never the key itself.
+    if (url.pathname === '/health') return json(200, { ok: true, reader: !!env.AI_API_KEY }, cors)
     if (url.pathname !== '/extract') return json(404, { error: 'Not found.' })
     if (!allowed.includes(origin)) return json(403, { error: 'This site is not allowed to use the reader.' })
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { ...cors, ...SECURITY_HEADERS } })

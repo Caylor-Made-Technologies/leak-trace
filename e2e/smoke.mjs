@@ -23,9 +23,10 @@ const errors = []
 const outside = new Set()
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
 page.on('pageerror', (e) => errors.push(e.message))
-page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin && !u.pathname.endsWith('/extract')) outside.add(u.origin) })
+page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin && !u.pathname.endsWith('/extract') && !u.pathname.endsWith('/health')) outside.add(u.origin) })
 
-// Fake reader so the screenshot flow can be tested without an API key.
+// Fake reader so the screenshot flow can be tested without an API key (switched on, then reading).
+await page.route('**/health', (route) => route.fulfill({ status: 200, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' }, body: JSON.stringify({ ok: true, reader: true }) }))
 await page.route('**/extract', (route) => route.fulfill({
   status: 200,
   headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' },

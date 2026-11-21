@@ -49,3 +49,14 @@ test('blocks other sites, wrong methods, and missing key', async () => {
   assert.equal(r.status, 204)
   assert.equal(r.headers.get('access-control-allow-origin'), 'https://app.example')
 })
+
+test('health says whether the reader is on, never the key', async () => {
+  const req = (o) => new Request('https://api.example/health', { headers: { origin: o } })
+  const off = await (await worker.fetch(req('https://app.example'), { ALLOWED_ORIGINS: 'https://app.example', AI_API_KEY: '' })).json()
+  assert.deepEqual(off, { ok: true, reader: false })
+  const res = await worker.fetch(req('https://app.example'), { ALLOWED_ORIGINS: 'https://app.example', AI_API_KEY: 'sk-secret' })
+  const text = await res.text()
+  assert.deepEqual(JSON.parse(text), { ok: true, reader: true })
+  assert.ok(!text.includes('sk-secret'))
+  assert.equal(res.headers.get('access-control-allow-origin'), 'https://app.example')
+})

@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useReaderStatus } from '../lib/readerStatus.js'
 import { motion } from 'motion/react'
 import { useApp } from '../state.jsx'
 import { Button, Card, Money } from '../components/ui.jsx'
@@ -18,6 +19,7 @@ import Logo from '../components/Logo.jsx'
 
 export default function Home({ go, openAdd }) {
   const { txns, loading, month, leaks, goals, leftover, showToast } = useApp()
+  const reader = useReaderStatus()
   const monthTxns = useMemo(() => inMonth(txns, month), [txns, month])
   const t = useMemo(() => totals(monthTxns), [monthTxns])
   const cats = useMemo(() => byCategory(monthTxns), [monthTxns])
@@ -41,11 +43,22 @@ export default function Home({ go, openAdd }) {
           <h2 className="font-display text-2xl font-extrabold">Find where your money slips away</h2>
           <p className="mx-auto mt-2 max-w-xs text-muted">Add your pay and spending. We'll spot the leaks and show how fast you can hit your goals.</p>
           <div className="mt-5 grid gap-2.5">
-            <Button onClick={() => openAdd('screenshot')}><CameraIcon size={20} /> Read screenshots</Button>
-            <div className="grid grid-cols-2 gap-2.5">
-              <Button variant="ghost" onClick={() => openAdd('csv')}><FileIcon size={20} /> Bank CSV</Button>
-              <Button variant="ghost" onClick={() => openAdd('manual')}><PenIcon size={20} /> Type it in</Button>
-            </div>
+            {reader !== 'off' ? (
+              <>
+                <Button onClick={() => openAdd('screenshot')}><CameraIcon size={20} /> Read screenshots</Button>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <Button variant="ghost" onClick={() => openAdd('csv')}><FileIcon size={20} /> Bank CSV</Button>
+                  <Button variant="ghost" onClick={() => openAdd('manual')}><PenIcon size={20} /> Type it in</Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Screenshot reading isn't switched on yet: lead with what works today. */}
+                <Button onClick={() => openAdd('manual')}><PenIcon size={20} /> Type it in</Button>
+                <Button variant="ghost" onClick={() => openAdd('csv')}><FileIcon size={20} /> Upload a bank CSV</Button>
+                <p className="text-xs text-faint">Reading screenshots of pay stubs and receipts is coming soon.</p>
+              </>
+            )}
             <Button variant="plain" onClick={async () => { const n = await addTransactions(demoTransactions()); showToast(`Loaded ${n} sample transactions`) }}>
               <SparkIcon size={18} /> Try it with sample data
             </Button>

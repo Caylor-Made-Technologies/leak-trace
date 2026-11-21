@@ -1,0 +1,1341 @@
+{
+ "idbVersion": 10,
+ "tables": {
+  "goals": [
+   {
+    "name": "Truck tires",
+    "emoji": "🎯",
+    "target": 120000,
+    "saved": 15000,
+    "targetDate": "2027-11-01",
+    "createdAt": 1795233105258,
+    "id": 1
+   }
+  ],
+  "rules": [
+   {
+    "merchant": "autozone",
+    "category": "groceries"
+   }
+  ],
+  "settings": [
+   {
+    "key": "autoHide",
+    "value": false
+   },
+   {
+    "key": "hourlyWage",
+    "value": 2250
+   },
+   {
+    "key": "plugged",
+    "value": [
+     "small-eating_out"
+    ]
+   }
+  ],
+  "transactions": [
+   {
+    "date": "2026-09-01",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104019,
+    "id": 1
+   },
+   {
+    "date": "2026-09-15",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104019,
+    "id": 2
+   },
+   {
+    "date": "2026-09-01",
+    "description": "RENT - SUNSET APARTMENTS",
+    "amount": 92500,
+    "type": "expense",
+    "category": "housing",
+    "source": "demo",
+    "createdAt": 1795233104019,
+    "id": 3
+   },
+   {
+    "date": "2026-09-04",
+    "description": "XCEL ENERGY",
+    "amount": 9200,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104019,
+    "id": 4
+   },
+   {
+    "date": "2026-09-06",
+    "description": "ATMOS ENERGY",
+    "amount": 4905,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104019,
+    "id": 5
+   },
+   {
+    "date": "2026-09-08",
+    "description": "VERIZON WIRELESS",
+    "amount": 8500,
+    "type": "expense",
+    "category": "phone",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 6
+   },
+   {
+    "date": "2026-09-09",
+    "description": "PROGRESSIVE INSURANCE",
+    "amount": 14200,
+    "type": "expense",
+    "category": "insurance",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 7
+   },
+   {
+    "date": "2026-09-12",
+    "description": "GM FINANCIAL AUTO PMT",
+    "amount": 48800,
+    "type": "expense",
+    "category": "car",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 8
+   },
+   {
+    "date": "2026-09-03",
+    "description": "NETFLIX.COM",
+    "amount": 1549,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 9
+   },
+   {
+    "date": "2026-09-05",
+    "description": "SPOTIFY USA",
+    "amount": 1199,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 10
+   },
+   {
+    "date": "2026-09-11",
+    "description": "PLANET FITNESS",
+    "amount": 2499,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 11
+   },
+   {
+    "date": "2026-09-17",
+    "description": "APPLE.COM/BILL",
+    "amount": 299,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 12
+   },
+   {
+    "date": "2026-09-02",
+    "description": "UNITED SUPERMARKETS",
+    "amount": 8263,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 13
+   },
+   {
+    "date": "2026-09-03",
+    "description": "SHELL OIL",
+    "amount": 6832,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 14
+   },
+   {
+    "date": "2026-09-09",
+    "description": "UNITED SUPERMARKETS",
+    "amount": 11512,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 15
+   },
+   {
+    "date": "2026-09-10",
+    "description": "SHELL OIL",
+    "amount": 6857,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 16
+   },
+   {
+    "date": "2026-09-16",
+    "description": "ALDI",
+    "amount": 10815,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 17
+   },
+   {
+    "date": "2026-09-17",
+    "description": "SHELL OIL",
+    "amount": 6105,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 18
+   },
+   {
+    "date": "2026-09-23",
+    "description": "WALMART SUPERCENTER",
+    "amount": 11247,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 19
+   },
+   {
+    "date": "2026-09-24",
+    "description": "SHELL OIL",
+    "amount": 5635,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 20
+   },
+   {
+    "date": "2026-09-20",
+    "description": "MCDONALD'S",
+    "amount": 1530,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 21
+   },
+   {
+    "date": "2026-09-23",
+    "description": "SONIC DRIVE IN",
+    "amount": 1162,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 22
+   },
+   {
+    "date": "2026-09-26",
+    "description": "TACO BELL",
+    "amount": 1279,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 23
+   },
+   {
+    "date": "2026-09-17",
+    "description": "CHICK-FIL-A",
+    "amount": 1518,
+    "type": "expense",
+    "category": "other",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 24
+   },
+   {
+    "date": "2026-09-11",
+    "description": "WHATABURGER",
+    "amount": 1453,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 25
+   },
+   {
+    "date": "2026-09-10",
+    "description": "SONIC DRIVE IN",
+    "amount": 968,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 26
+   },
+   {
+    "date": "2026-09-12",
+    "description": "WHATABURGER",
+    "amount": 1544,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 27
+   },
+   {
+    "date": "2026-09-16",
+    "description": "TACO BELL",
+    "amount": 1490,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 28
+   },
+   {
+    "date": "2026-09-02",
+    "description": "ALLSUP'S #312",
+    "amount": 692,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 29
+   },
+   {
+    "date": "2026-09-15",
+    "description": "TOOT N TOTUM",
+    "amount": 435,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 30
+   },
+   {
+    "date": "2026-09-26",
+    "description": "ALLSUP'S #312",
+    "amount": 556,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 31
+   },
+   {
+    "date": "2026-09-10",
+    "description": "TOOT N TOTUM",
+    "amount": 947,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 32
+   },
+   {
+    "date": "2026-09-15",
+    "description": "ALLSUP'S #312",
+    "amount": 584,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 33
+   },
+   {
+    "date": "2026-09-08",
+    "description": "TOOT N TOTUM",
+    "amount": 597,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 34
+   },
+   {
+    "date": "2026-09-10",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 656,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 35
+   },
+   {
+    "date": "2026-09-17",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 597,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 36
+   },
+   {
+    "date": "2026-09-25",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 642,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 37
+   },
+   {
+    "date": "2026-09-24",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 677,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 38
+   },
+   {
+    "date": "2026-09-22",
+    "description": "AMAZON MKTPLACE",
+    "amount": 6069,
+    "type": "expense",
+    "category": "shopping",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 39
+   },
+   {
+    "date": "2026-09-25",
+    "description": "CINEMARK THEATRES",
+    "amount": 3200,
+    "type": "expense",
+    "category": "entertainment",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 40
+   },
+   {
+    "date": "2026-09-26",
+    "description": "TRANSFER TO SAVINGS",
+    "amount": 10000,
+    "type": "expense",
+    "category": "savings",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 41
+   },
+   {
+    "date": "2026-10-01",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 42
+   },
+   {
+    "date": "2026-10-15",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 43
+   },
+   {
+    "date": "2026-10-20",
+    "description": "CASH APP *SOLD TOOLBOX",
+    "amount": 12000,
+    "type": "income",
+    "category": "income_other",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 44
+   },
+   {
+    "date": "2026-10-01",
+    "description": "RENT - SUNSET APARTMENTS",
+    "amount": 92500,
+    "type": "expense",
+    "category": "housing",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 45
+   },
+   {
+    "date": "2026-10-04",
+    "description": "XCEL ENERGY",
+    "amount": 10749,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 46
+   },
+   {
+    "date": "2026-10-06",
+    "description": "ATMOS ENERGY",
+    "amount": 4406,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 47
+   },
+   {
+    "date": "2026-10-08",
+    "description": "VERIZON WIRELESS",
+    "amount": 8500,
+    "type": "expense",
+    "category": "phone",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 48
+   },
+   {
+    "date": "2026-10-09",
+    "description": "PROGRESSIVE INSURANCE",
+    "amount": 14200,
+    "type": "expense",
+    "category": "insurance",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 49
+   },
+   {
+    "date": "2026-10-12",
+    "description": "GM FINANCIAL AUTO PMT",
+    "amount": 48800,
+    "type": "expense",
+    "category": "car",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 50
+   },
+   {
+    "date": "2026-10-03",
+    "description": "NETFLIX.COM",
+    "amount": 1549,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 51
+   },
+   {
+    "date": "2026-10-05",
+    "description": "SPOTIFY USA",
+    "amount": 1199,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 52
+   },
+   {
+    "date": "2026-10-11",
+    "description": "PLANET FITNESS",
+    "amount": 2499,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 53
+   },
+   {
+    "date": "2026-10-17",
+    "description": "APPLE.COM/BILL",
+    "amount": 299,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 54
+   },
+   {
+    "date": "2026-10-19",
+    "description": "PARAMOUNT+",
+    "amount": 799,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 55
+   },
+   {
+    "date": "2026-10-02",
+    "description": "ALDI",
+    "amount": 12637,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 56
+   },
+   {
+    "date": "2026-10-03",
+    "description": "LOVES TRAVEL #455",
+    "amount": 7271,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 57
+   },
+   {
+    "date": "2026-10-09",
+    "description": "UNITED SUPERMARKETS",
+    "amount": 10521,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 58
+   },
+   {
+    "date": "2026-10-10",
+    "description": "LOVES TRAVEL #455",
+    "amount": 6326,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 59
+   },
+   {
+    "date": "2026-10-16",
+    "description": "WALMART SUPERCENTER",
+    "amount": 11768,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 60
+   },
+   {
+    "date": "2026-10-17",
+    "description": "SHELL OIL",
+    "amount": 5778,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 61
+   },
+   {
+    "date": "2026-10-23",
+    "description": "ALDI",
+    "amount": 7466,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 62
+   },
+   {
+    "date": "2026-10-24",
+    "description": "LOVES TRAVEL #455",
+    "amount": 5884,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104020,
+    "id": 63
+   },
+   {
+    "date": "2026-10-03",
+    "description": "CHICK-FIL-A",
+    "amount": 898,
+    "type": "expense",
+    "category": "other",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 64
+   },
+   {
+    "date": "2026-10-18",
+    "description": "SONIC DRIVE IN",
+    "amount": 1111,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 65
+   },
+   {
+    "date": "2026-10-17",
+    "description": "SONIC DRIVE IN",
+    "amount": 1530,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 66
+   },
+   {
+    "date": "2026-10-25",
+    "description": "CHICK-FIL-A",
+    "amount": 1497,
+    "type": "expense",
+    "category": "other",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 67
+   },
+   {
+    "date": "2026-10-26",
+    "description": "TACO BELL",
+    "amount": 948,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 68
+   },
+   {
+    "date": "2026-10-01",
+    "description": "WHATABURGER",
+    "amount": 768,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 69
+   },
+   {
+    "date": "2026-10-01",
+    "description": "TACO BELL",
+    "amount": 908,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 70
+   },
+   {
+    "date": "2026-10-21",
+    "description": "MCDONALD'S",
+    "amount": 1319,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 71
+   },
+   {
+    "date": "2026-10-07",
+    "description": "7-ELEVEN",
+    "amount": 465,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 72
+   },
+   {
+    "date": "2026-10-11",
+    "description": "7-ELEVEN",
+    "amount": 383,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 73
+   },
+   {
+    "date": "2026-10-14",
+    "description": "ALLSUP'S #312",
+    "amount": 939,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 74
+   },
+   {
+    "date": "2026-10-18",
+    "description": "7-ELEVEN",
+    "amount": 315,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 75
+   },
+   {
+    "date": "2026-10-26",
+    "description": "ALLSUP'S #312",
+    "amount": 978,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 76
+   },
+   {
+    "date": "2026-10-16",
+    "description": "7-ELEVEN",
+    "amount": 486,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 77
+   },
+   {
+    "date": "2026-10-07",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 592,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 78
+   },
+   {
+    "date": "2026-10-16",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 560,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 79
+   },
+   {
+    "date": "2026-10-22",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 690,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 80
+   },
+   {
+    "date": "2026-10-20",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 650,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 81
+   },
+   {
+    "date": "2026-10-22",
+    "description": "AMAZON MKTPLACE",
+    "amount": 4865,
+    "type": "expense",
+    "category": "shopping",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 82
+   },
+   {
+    "date": "2026-10-25",
+    "description": "CINEMARK THEATRES",
+    "amount": 3200,
+    "type": "expense",
+    "category": "entertainment",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 83
+   },
+   {
+    "date": "2026-10-26",
+    "description": "TRANSFER TO SAVINGS",
+    "amount": 10000,
+    "type": "expense",
+    "category": "savings",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 84
+   },
+   {
+    "date": "2026-10-28",
+    "description": "CREDIT CARD INTEREST CHARGE",
+    "amount": 1840,
+    "type": "expense",
+    "category": "fees",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 85
+   },
+   {
+    "date": "2026-11-01",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 86
+   },
+   {
+    "date": "2026-11-15",
+    "description": "PAYROLL DIRECT DEP",
+    "amount": 168540,
+    "type": "income",
+    "category": "paycheck",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 87
+   },
+   {
+    "date": "2026-11-01",
+    "description": "RENT - SUNSET APARTMENTS",
+    "amount": 92500,
+    "type": "expense",
+    "category": "housing",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 88
+   },
+   {
+    "date": "2026-11-04",
+    "description": "XCEL ENERGY",
+    "amount": 9531,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 89
+   },
+   {
+    "date": "2026-11-06",
+    "description": "ATMOS ENERGY",
+    "amount": 4903,
+    "type": "expense",
+    "category": "utilities",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 90
+   },
+   {
+    "date": "2026-11-08",
+    "description": "VERIZON WIRELESS",
+    "amount": 8500,
+    "type": "expense",
+    "category": "phone",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 91
+   },
+   {
+    "date": "2026-11-09",
+    "description": "PROGRESSIVE INSURANCE",
+    "amount": 14200,
+    "type": "expense",
+    "category": "insurance",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 92
+   },
+   {
+    "date": "2026-11-12",
+    "description": "GM FINANCIAL AUTO PMT",
+    "amount": 48800,
+    "type": "expense",
+    "category": "car",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 93
+   },
+   {
+    "date": "2026-11-03",
+    "description": "NETFLIX.COM",
+    "amount": 1549,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 94
+   },
+   {
+    "date": "2026-11-05",
+    "description": "SPOTIFY USA",
+    "amount": 1199,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 95
+   },
+   {
+    "date": "2026-11-11",
+    "description": "PLANET FITNESS",
+    "amount": 2499,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 96
+   },
+   {
+    "date": "2026-11-17",
+    "description": "APPLE.COM/BILL",
+    "amount": 299,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 97
+   },
+   {
+    "date": "2026-11-19",
+    "description": "PARAMOUNT+",
+    "amount": 799,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 98
+   },
+   {
+    "date": "2026-11-20",
+    "description": "PARAMOUNT+",
+    "amount": 799,
+    "type": "expense",
+    "category": "subscriptions",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 99
+   },
+   {
+    "date": "2026-11-02",
+    "description": "UNITED SUPERMARKETS",
+    "amount": 11127,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 100
+   },
+   {
+    "date": "2026-11-03",
+    "description": "SHELL OIL",
+    "amount": 5593,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 101
+   },
+   {
+    "date": "2026-11-09",
+    "description": "ALDI",
+    "amount": 12168,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 102
+   },
+   {
+    "date": "2026-11-10",
+    "description": "SHELL OIL",
+    "amount": 7886,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 103
+   },
+   {
+    "date": "2026-11-16",
+    "description": "ALDI",
+    "amount": 9518,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 104
+   },
+   {
+    "date": "2026-11-17",
+    "description": "ALLSUP'S #312",
+    "amount": 7319,
+    "type": "expense",
+    "category": "gas",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 105
+   },
+   {
+    "date": "2026-11-18",
+    "description": "TACO BELL",
+    "amount": 1002,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 106
+   },
+   {
+    "date": "2026-11-21",
+    "description": "MCDONALD'S",
+    "amount": 879,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 107
+   },
+   {
+    "date": "2026-11-09",
+    "description": "CHICK-FIL-A",
+    "amount": 1595,
+    "type": "expense",
+    "category": "other",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 108
+   },
+   {
+    "date": "2026-11-18",
+    "description": "CHICK-FIL-A",
+    "amount": 1526,
+    "type": "expense",
+    "category": "other",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 109
+   },
+   {
+    "date": "2026-11-06",
+    "description": "TACO BELL",
+    "amount": 822,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 110
+   },
+   {
+    "date": "2026-11-14",
+    "description": "MCDONALD'S",
+    "amount": 1394,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 111
+   },
+   {
+    "date": "2026-11-13",
+    "description": "SONIC DRIVE IN",
+    "amount": 1296,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 112
+   },
+   {
+    "date": "2026-11-15",
+    "description": "MCDONALD'S",
+    "amount": 1156,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 113
+   },
+   {
+    "date": "2026-11-01",
+    "description": "WHATABURGER",
+    "amount": 1188,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 114
+   },
+   {
+    "date": "2026-11-06",
+    "description": "TACO BELL",
+    "amount": 962,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 115
+   },
+   {
+    "date": "2026-11-07",
+    "description": "TACO BELL",
+    "amount": 1086,
+    "type": "expense",
+    "category": "eating_out",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 116
+   },
+   {
+    "date": "2026-11-03",
+    "description": "7-ELEVEN",
+    "amount": 876,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 117
+   },
+   {
+    "date": "2026-11-17",
+    "description": "7-ELEVEN",
+    "amount": 929,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 118
+   },
+   {
+    "date": "2026-11-02",
+    "description": "ALLSUP'S #312",
+    "amount": 356,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 119
+   },
+   {
+    "date": "2026-11-04",
+    "description": "ALLSUP'S #312",
+    "amount": 307,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 120
+   },
+   {
+    "date": "2026-11-17",
+    "description": "7-ELEVEN",
+    "amount": 434,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 121
+   },
+   {
+    "date": "2026-11-04",
+    "description": "ALLSUP'S #312",
+    "amount": 772,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 122
+   },
+   {
+    "date": "2026-11-07",
+    "description": "TOOT N TOTUM",
+    "amount": 996,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 123
+   },
+   {
+    "date": "2026-11-12",
+    "description": "7-ELEVEN",
+    "amount": 842,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 124
+   },
+   {
+    "date": "2026-11-12",
+    "description": "TOOT N TOTUM",
+    "amount": 343,
+    "type": "expense",
+    "category": "convenience",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 125
+   },
+   {
+    "date": "2026-11-07",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 712,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 126
+   },
+   {
+    "date": "2026-11-05",
+    "description": "DUTCH BROS COFFEE",
+    "amount": 592,
+    "type": "expense",
+    "category": "coffee",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 127
+   },
+   {
+    "date": "2026-11-14",
+    "description": "OVERDRAFT FEE",
+    "amount": 3500,
+    "type": "expense",
+    "category": "fees",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 128
+   },
+   {
+    "date": "2026-11-18",
+    "description": "NON-NETWORK ATM FEE",
+    "amount": 350,
+    "type": "expense",
+    "category": "fees",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 129
+   },
+   {
+    "date": "2026-11-21",
+    "description": "AUTOZONE #1182",
+    "amount": 6420,
+    "type": "expense",
+    "category": "groceries",
+    "source": "demo",
+    "createdAt": 1795233104021,
+    "id": 130
+   }
+  ]
+ },
+ "localStorage": {}
+}

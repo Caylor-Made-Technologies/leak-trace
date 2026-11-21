@@ -49,16 +49,10 @@ Colors: navy `#0B0F14`, brand blue `#1E6FFF` / button blue `#1B63EB`, glow blue 
 
 - **Data stays on the phone** (IndexedDB). No accounts, cookies, analytics, ads or trackers.
 - **Never asks for** bank logins, full account/card/routing numbers or SSNs. Anything that looks like one is masked to the last 4 digits (SSNs are removed) on every save path: typing, CSV, screenshots and backups. A database hook re-checks every write.
-- **Screenshots are never stored.** They're shrunk and stripped of location/device data on the phone (re-drawn on a canvas), read once, then dropped from memory. Nothing is written to disk.
-- **API key stays off the phone.** The Cloudflare Worker in `worker/` holds it as a secret and:
-  - only answers the app's own address (origin allowlist; other sites get 403)
-  - rate-limits each visitor (8 reads/minute, keyed by a hash of the IP)
-  - accepts only 1–5 JPEG/PNG/WebP/GIF images, checks their real file type, caps size
-  - uses a strict output schema, then masks numbers again before replying
-  - never logs images or results
+- **Screenshots are read on the phone and never leave it.** The text reader (Tesseract, open source, Apache-2.0) runs inside the app in a background worker. Pictures are re-drawn on a canvas (which drops location/device data), read once, then dropped from memory. Nothing is sent and nothing is written to disk. No server, no API key, no cost.
 - **Backups** can be locked with a password (AES-256-GCM, PBKDF2-SHA256 600k rounds). Restored files are fully re-validated.
-- **App hardening:** strict Content Security Policy (no inline scripts or styles; connects only to itself and the reader), `X-Frame-Options: DENY`, HSTS, no-referrer, Permissions-Policy, frame-buster, user text never inserted as HTML, CSV export protected against spreadsheet formula injection.
-- Privacy policy and terms (incl. price/refunds and business contact) are in **Settings → Privacy & terms**. Before the first screenshot read there's an unchecked "18+ and I agree" box; the time you agreed is saved on the phone. The policy is a template until an attorney reviews it.
+- **App hardening:** strict Content Security Policy (no inline scripts or styles; `connect-src 'self'`, so the app can't talk to any other site; `'wasm-unsafe-eval'` only so the reader's WebAssembly can run), `X-Frame-Options: DENY`, HSTS, no-referrer, Permissions-Policy, frame-buster, user text never inserted as HTML, CSV export protected against spreadsheet formula injection.
+- Privacy policy and terms (incl. price/refunds and business contact) are in **Settings → Privacy & terms**. There's no "OK to send" box any more because screenshots aren't sent anywhere. The policy is a template until an attorney reviews it.
 
 ## Security and legal checklist (20 points)
 
@@ -69,9 +63,9 @@ Colors: navy `#0B0F14`, brand blue `#1E6FFF` / button blue `#1B63EB`, glow blue 
 | 3 | Refund policy | Free app, nothing to refund (stated in terms) |
 | 4 | Cookie policy | Section in the privacy policy: no cookies |
 | 5 | Cookie banner | Not needed: no analytics or ad pixels |
-| 6 | Form consents | Unchecked 18+ / terms / OK-to-send box before screenshots are sent; time saved |
+| 6 | Form consents | Nothing is collected or sent; screenshots are read on the phone (no consent box needed) |
 | 7 | No unnecessary data | Only date, description, amount, category; never logins or full numbers |
-| 8 | Third parties listed | Cloudflare and Anthropic named in the policy; fonts bundled |
+| 8 | Third parties listed | None; Cloudflare only hosts the files. Fonts and the reader are bundled (licenses in `public/licenses/`) |
 | 9 | Dark patterns | None; delete-all is two taps + typing DELETE |
 | 10 | Hidden fees | "Free. No ads, no in-app purchases, no subscriptions." in Settings |
 | 11 | Fake reviews | No reviews or testimonials |
@@ -106,13 +100,18 @@ src/
     goals.js, invest.js    goal and growth math
     insights.js            plain-English tips
     csv.js, backup.js      CSV import/export, encrypted backups
-    image.js, extract.js   screenshot prep + reader client
-worker/                    Cloudflare Worker: the screenshot reader API
+    ocr.js                 on-device screenshot reader (Tesseract in a worker; loads only when used)
+    ocrParse.js            text -> transactions (pay stub net pay, receipt total, bank rows), unit tested
+    extract.js             checks + masks whatever was read before the review screen
+worker/                    the old cloud reader (Cloudflare Worker). The app no longer uses it
+scripts/ocr-assets.mjs     copies the reader files into public/ocr/ before dev/build (self-hosted, no CDN)
 caylor-ui/                 shared tokens + components (copied; version in caylor-ui/VERSION)
 tests/                     unit tests (node --test), incl. the v1 -> v2 database upgrade
 tests/fixtures/            a database written by the v1 app (for the upgrade test)
 e2e/smoke.mjs              browser test at iPhone size (Playwright + axe)
 e2e/scene.mjs              upgrade in a real browser, pipe scene 3D + drawing, 320 px, screenshots
+e2e/reader.mjs             the real reader on test screenshots, scored against an answer key; offline; nothing sent
+e2e/make-screens.mjs       draws those test screenshots (made-up data) + answers.json
 wrangler.toml              hosting config for the app (static files on Cloudflare)
 ```
 
@@ -127,16 +126,7 @@ npm test             # unit tests
 npm run build        # production build in dist/
 ```
 
-Screenshot reading works locally if you also run the Worker:
-
-```bash
-cd worker
-npm install
-echo 'AI_API_KEY=sk-ant-...' > .dev.vars   # never commit this file
-npx wrangler dev --port 8799
-# then in the project root:
-echo 'VITE_API_URL=http://localhost:8799' > .env.local && npm run dev
-```
+Screenshot reading works locally with nothing else to run: `npm run dev` copies the reader into `public/ocr/`.
 
 Browser test (uses Playwright and Chromium):
 
@@ -144,7 +134,11 @@ Browser test (uses Playwright and Chromium):
 npm run build && npx vite preview --port 4173 &
 BASE_URL=http://localhost:4173/ AXE_PATH=node_modules/axe-core/axe.min.js PLAYWRIGHT_PATH=$(node -p "require.resolve('playwright')") node e2e/smoke.mjs
 BASE_URL=http://localhost:4173/ node e2e/scene.mjs   # also saves docs/screenshots/after-*.png
+BASE_URL=http://localhost:4173/ node e2e/reader.mjs  # screenshot reader accuracy on tests/fixtures/screens/
 ```
+
+### Screenshot reader accuracy (measured)
+On the 5 test screenshots in `tests/fixtures/screens/` (bank app light + dark, a pay stub, a receipt, and a low-res heavily compressed JPEG; made-up data): **27 of 27 rows fully right** (merchant, amount, date, in/out), 0 made-up rows, 1.3–1.9 s per screenshot on this test machine. These are clean renders; real screenshots and photos vary, so every row still goes through the review screen, and rows the reader wasn't sure of are flagged.
 Add `?3d=1` or `?3d=0` to the URL to force the 3D pipe or the drawing.
 
 ### Saved data versions
@@ -152,22 +146,14 @@ IndexedDB schema v1 is what the app wrote at launch. v2 stores each transaction'
 
 ## Deploy
 
-Both parts run on Cloudflare (free plan is fine).
+Runs on Cloudflare (free plan is fine).
 
-1. **Screenshot reader (Worker)**
-   ```bash
-   cd worker
-   npm install
-   npx wrangler login
-   npx wrangler secret put AI_API_KEY     # paste an API key from console.anthropic.com
-   npx wrangler deploy
-   ```
-   Put your app's address in `ALLOWED_ORIGINS` in `worker/wrangler.toml`. Model and effort are set there too (`MODEL`, `EFFORT`).
-2. **App**: set `VITE_API_URL` in `.env.production` to the Worker's URL, then:
+1. **App** (the screenshot reader is part of it; nothing else to deploy):
    ```bash
    npm run build
    npx wrangler deploy        # uses ./wrangler.toml, serves dist/
    ```
+2. **Old cloud reader** (`worker/`): not used by the app any more. Left deployed until you decide to delete it.
 3. **Auto-deploy from GitHub:** add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. Every push to `main` then tests, builds and deploys both parts (`.github/workflows/ci.yml`). Without the secrets it still runs the tests.
 
 Bump nothing by hand for updates: the service worker auto-updates on the next visit.

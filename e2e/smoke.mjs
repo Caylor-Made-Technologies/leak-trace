@@ -23,19 +23,7 @@ const errors = []
 const outside = new Set()
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
 page.on('pageerror', (e) => errors.push(e.message))
-page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin && !u.pathname.endsWith('/extract') && !u.pathname.endsWith('/health')) outside.add(u.origin) })
-
-// Fake reader so the screenshot flow can be tested without an API key (switched on, then reading).
-await page.route('**/health', (route) => route.fulfill({ status: 200, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' }, body: JSON.stringify({ ok: true, reader: true }) }))
-await page.route('**/extract', (route) => route.fulfill({
-  status: 200,
-  headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' },
-  body: JSON.stringify({ document_type: 'bank_list', masked_numbers: true, transactions: [
-    { date: '2026-10-20', merchant: 'Transfer to 4111111111111111', amount: 40, type: 'expense', category_hint: 'transfer', confidence: 'high' },
-    { date: '', merchant: 'Sonic', amount: 9.41, type: 'expense', category_hint: 'eating_out', confidence: 'low' },
-    { date: '2026-10-17', merchant: 'Paycheck', amount: 1685.4, type: 'income', category_hint: 'paycheck', confidence: 'high' },
-  ] }),
-}))
+page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin && !/^(blob|data):/.test(u.protocol)) outside.add(u.origin) })
 
 async function axe(label) {
   if (!AXE) return
@@ -126,18 +114,16 @@ const all = await page.evaluate(async () => {
 })
 check(!all.includes('000123456789') && !all.includes('4111'), 'no full account/card numbers stored anywhere')
 
-// Screenshot reading (mocked reader)
+// Screenshot reading: the real on-device reader on a test screenshot with a full card number in it.
 await page.getByRole('button', { name: 'Add money in or out' }).click()
 await page.getByRole('button', { name: /Read screenshots/ }).click()
-const png = readFileSync(new URL('../public/icons/icon-192.png', import.meta.url))
-await page.locator('#shots').setInputFiles([{ name: 'stub.png', mimeType: 'image/png', buffer: png }])
-check(await page.getByRole('button', { name: /Read 1 screenshot/ }).isDisabled(), 'consent box required before sending screenshots')
-await page.getByRole('checkbox', { name: /18 or older/ }).check()
+await page.locator('#shots').setInputFiles(new URL('../tests/fixtures/screens/masking.png', import.meta.url).pathname)
+check(await page.getByText(/Read on your phone/).first().isVisible(), 'says screenshots are read on the phone')
 await page.getByRole('button', { name: /Read 1 screenshot/ }).click()
-await page.getByText(/Found 3 items/).waitFor()
+await page.getByText(/Found 3 items/).waitFor({ timeout: 120000 })
 check((await page.locator('img[src^="blob:"]').count()) === 0, 'screenshots removed from screen after reading')
 check(await page.getByText('Account or card numbers were hidden').isVisible(), 'masking notice shown')
-check(await page.locator('input[aria-label="Description"]').first().inputValue() === 'Transfer to ••••1111', 'reader output masked again in the app')
+check((await page.locator('input[aria-label="Description"]').first().inputValue()).includes('••••1111'), 'card number masked before review')
 await shot('09-review')
 await axe('screenshot review')
 await page.getByRole('button', { name: /^Save 3/ }).click()

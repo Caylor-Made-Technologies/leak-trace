@@ -10,3 +10,4 @@ worker/node_modules/
 worker/.dev.vars
 test-results/
 *.log
+public/ocr/

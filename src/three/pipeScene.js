@@ -131,8 +131,10 @@ export function mount(canvas, { model, onLost }) {
   }
 
   placeDots(0)
+  stage.warm()
   update(model0)
   return {
+    firstFrame: stage.firstFrame,
     update,
     dispose() { runId++; clearJoints(); glowTex.dispose(); stage.dispose() },
     frames: stage.frames,

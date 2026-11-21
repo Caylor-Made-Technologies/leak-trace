@@ -55,7 +55,7 @@ export default function PipeRun({ leaks, focusId }) {
       })
       if (location.search.includes('debug3d')) window.__scene3d = view.current
       setMode('3d')
-      requestAnimationFrame(() => alive && setLive(true))
+      view.current.firstFrame.then(() => alive && setLive(true))
     }).catch(() => alive && setMode('2d:load-failed'))
     return () => { alive = false; view.current?.dispose(); view.current = null }
   }, [])

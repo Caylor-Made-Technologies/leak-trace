@@ -152,7 +152,7 @@ export default function ScreenshotImport({ onDone }) {
             {!agreedAt ? (
               <div className="rounded-2xl border border-line bg-card p-3 text-sm">
                 <label className="flex min-h-11 items-start gap-3">
-                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-6 w-6 shrink-0 accent-[#3d8bff]" />
+                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-6 w-6 shrink-0 accent-[#22d3ee]" />
                   <span>I’m 18 or older, I agree to the <button type="button" className="font-semibold text-accent underline" onClick={() => setShowPolicy((v) => !v)}>Terms and Privacy Policy</button>, and I’m OK with these screenshots being sent to be read (then deleted).</span>
                 </label>
                 {showPolicy && <div className="mt-2"><Policy startOpen /></div>}
@@ -169,7 +169,7 @@ export default function ScreenshotImport({ onDone }) {
           <motion.div key="reading" className="py-4 text-center" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
             <div className="mx-auto flex max-w-xs justify-center gap-2">
               {images.slice(0, 3).map((img, i) => (
-                <motion.div key={img.id} className="relative aspect-[3/4] w-24 overflow-hidden rounded-2xl border border-brand-2/60 shadow-[0_0_24px_-4px_rgba(61,139,255,0.6)]" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.6, delay: i * 0.2 }}>
+                <motion.div key={img.id} className="relative aspect-[3/4] w-24 overflow-hidden rounded-2xl border border-brand-2/60 shadow-[0_0_24px_-4px_rgba(34,211,238,0.6)]" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.6, delay: i * 0.2 }}>
                   <img src={img.url} alt="" className="h-full w-full object-cover opacity-70" />
                   <div className="scanline" />
                 </motion.div>
@@ -215,7 +215,7 @@ function ReviewRow({ r, i, update }) {
       className={`rounded-2xl border bg-card p-3 ${low ? 'border-warn/60' : 'border-line'}`}
     >
       <div className="flex items-center gap-2">
-        <input type="checkbox" aria-label={`Include ${r.description}`} checked={r.include} onChange={(e) => update(r.key, { include: e.target.checked })} className="h-6 w-6 shrink-0 accent-[#3d8bff]" />
+        <input type="checkbox" aria-label={`Include ${r.description}`} checked={r.include} onChange={(e) => update(r.key, { include: e.target.checked })} className="h-6 w-6 shrink-0 accent-[#22d3ee]" />
         <input aria-label="Description" className={`${inputClass} min-h-11 flex-1 px-3`} value={r.description} maxLength={80} onChange={(e) => update(r.key, { description: e.target.value })} />
       </div>
       <div className="mt-2 grid grid-cols-[1fr_1fr] gap-2">

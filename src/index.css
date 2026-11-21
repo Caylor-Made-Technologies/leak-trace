@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+/* caylor-ui 1.0.0 (copied, see caylor-ui/). Layered so Tailwind utilities still win. */
+@import '../caylor-ui/tokens.css' layer(base);
+@import '../caylor-ui/base.css' layer(components);
 
 /* Fonts are bundled with the app (no outside requests). Latin only to keep it small. OFL-1.1. */
 @font-face { font-family: 'Inter Variable'; font-style: normal; font-display: swap; font-weight: 100 900; src: url('../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations'); }
@@ -10,18 +13,24 @@
 
 :root {
   color-scheme: dark;
+  /* Surfaces from caylor-ui; accent: cyan (Leak Trace). --brand fills carry white text (5.4:1). */
   --bg: #0b0f14;
-  --bg-2: #0f1520;
-  --card: #121a26;
-  --card-2: #182233;
-  --line: rgb(255 255 255 / 0.08);
-  --line-2: rgb(255 255 255 / 0.14);
+  --bg-2: #0e131a;
+  --card: #121821;
+  --card-2: #1a2230;
+  --line: #253043;
+  --line-2: #34425a;
   --text: #eaf0f8;
   --muted: #a3b1c4;
-  --faint: #7c8ba0;
-  --brand: #1b63eb;
-  --brand-2: #3d8bff;
-  --accent: #6aa6ff;
+  --faint: #8d9bb0;
+  --brand: #0e7490;
+  --brand-2: #22d3ee;
+  --accent: #67e8f9;
+  --accent-strong: #0e7490;
+  --on-accent: #ffffff;
+  --accent-text: #67e8f9;
+  --accent-soft: rgba(34, 211, 238, 0.14);
+  --rgb-accent: 34 211 238;
   --good: #34d399;
   --bad: #f87171;
   --warn: #fbbf24;
@@ -39,7 +48,7 @@
     --text: #0d1726;
     --muted: #46566c;
     --faint: #546378;
-    --accent: #1557d6;
+    --accent: #0b5f75;
     --good: #03684a;
     --bad: #c62828;
     --warn: #8a4f00;
@@ -57,7 +66,7 @@
   --text: #0d1726;
   --muted: #46566c;
   --faint: #546378;
-  --accent: #1557d6;
+  --accent: #0b5f75;
   --good: #03684a;
   --bad: #c62828;
   --warn: #8a4f00;
@@ -109,8 +118,8 @@ button { cursor: pointer; }
 /* Soft glowing backdrop with slowly drifting light */
 .backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
 .backdrop .orb { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.35; }
-.backdrop .orb.a { width: 340px; height: 340px; top: -120px; left: -80px; background: radial-gradient(circle, #1b63eb, transparent 70%); animation: drift 22s ease-in-out infinite alternate; }
-.backdrop .orb.b { width: 300px; height: 300px; bottom: 10%; right: -120px; background: radial-gradient(circle, #3d8bff, transparent 70%); opacity: 0.22; animation: drift 28s ease-in-out infinite alternate-reverse; }
+.backdrop .orb.a { width: 340px; height: 340px; top: -120px; left: -80px; background: radial-gradient(circle, #0e7490, transparent 70%); }
+.backdrop .orb.b { width: 300px; height: 300px; bottom: 10%; right: -120px; background: radial-gradient(circle, #22d3ee, transparent 70%); opacity: 0.22; }
 .backdrop .grid { position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 32px 32px; mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%); opacity: 0.5; }
 [data-theme='light'] .backdrop .orb { opacity: 0.16; }
 @keyframes drift { to { transform: translate(60px, 80px) scale(1.15); } }
@@ -143,3 +152,24 @@ input[type='range'] { accent-color: var(--brand-2); height: 28px; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
   .shine::after, .drip, .backdrop .orb { animation: none !important; }
 }
+
+/* whileTap in the motion stand-in: a small press. */
+.press { transition: transform var(--dur-fast) var(--ease); }
+.press:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) { .press:active { transform: none; } }
+
+/* ---------- Where it leaks (PipeRun) ---------- */
+.pipe-stage { aspect-ratio: 2 / 1; width: 100%; border: 1px solid var(--line); }
+.pipe-svg { display: block; }
+.pipe-floor { fill: rgb(0 0 0 / 0.28); }
+.pipe-body { fill: none; stroke: #6d7884; stroke-width: 26; stroke-linecap: round; stroke-linejoin: round; }
+.pipe-shine { fill: none; stroke: #a9b4c0; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; transform: translateY(-6px); opacity: 0.6; }
+.pipe-flow-mask { fill: none; stroke: #22d3ee; stroke-width: 6; stroke-linecap: round; opacity: 0.85; }
+.pipe-valve { fill: none; stroke: #0e7490; stroke-width: 5; }
+.pipe-flange { fill: #5b6672; }
+.pipe-glow { fill: #22d3ee; opacity: 0.18; }
+.pipe-drip, .pipe-puddle { fill: #22d3ee; }
+.pipe-puddle { opacity: 0.22; }
+.pipe-leak.is-focus .pipe-glow { fill: #ffb547; opacity: 0.32; }
+.pipe-leak.is-focus .pipe-drip, .pipe-leak.is-focus .pipe-puddle { fill: #ffb547; }
+.pipe-leak.is-focus .pipe-puddle { opacity: 0.38; }

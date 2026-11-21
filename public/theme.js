@@ -3,8 +3,9 @@
 (function () {
   try {
     var t = localStorage.getItem('mlf.theme')
-    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
-  } catch (e) {}
+    // Dark by default; 'system' follows the phone; light or dark when chosen in Settings.
+    if (t !== 'system') document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark')
+  } catch (e) { document.documentElement.setAttribute('data-theme', 'dark') }
   if (window.top !== window.self) {
     document.documentElement.style.display = 'none'
     try { window.top.location = window.self.location } catch (e) {}

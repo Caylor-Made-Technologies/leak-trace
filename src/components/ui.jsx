@@ -215,7 +215,7 @@ export function ProgressRing({ value, size = 64, stroke = 7, children }) {
         />
         <defs>
           <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#3d8bff" />
+            <stop offset="0%" stopColor="#22d3ee" />
             <stop offset="100%" stopColor="#34d399" />
           </linearGradient>
         </defs>
@@ -233,7 +233,7 @@ export function Confetti({ show, onDone }) {
     x: (Math.random() - 0.5) * 340,
     y: -(Math.random() * 380 + 120),
     r: Math.random() * 720 - 360,
-    c: ['#3d8bff', '#34d399', '#fbbf24', '#f472b6', '#a78bfa', '#ffffff'][i % 6],
+    c: ['#22d3ee', '#34d399', '#fbbf24', '#f472b6', '#a78bfa', '#ffffff'][i % 6],
     w: 6 + Math.random() * 6,
     d: Math.random() * 0.15,
   })))

@@ -23,7 +23,7 @@ export function AppProvider({ children }) {
 
   const [month, setMonth] = useState(currentMonth())
   const [privacy, setPrivacy] = useState(() => readLocal('mlf.privacy', '0') === '1')
-  const [theme, setThemeState] = useState(() => readLocal('mlf.theme', 'system'))
+  const [theme, setThemeState] = useState(() => readLocal('mlf.theme', 'dark'))
   const [systemDark, setSystemDark] = useState(() => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true)
   const [toast, setToast] = useState(null)
 
@@ -37,7 +37,7 @@ export function AppProvider({ children }) {
 
   const setTheme = useCallback((t) => {
     setThemeState(t)
-    writeLocal('mlf.theme', t === 'system' ? null : t)
+    writeLocal('mlf.theme', t) // 'system' is saved too: nothing saved means the dark default
     if (t === 'system') document.documentElement.removeAttribute('data-theme')
     else document.documentElement.setAttribute('data-theme', t)
   }, [])

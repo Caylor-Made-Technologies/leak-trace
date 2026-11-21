@@ -74,7 +74,7 @@ export default function TxnForm({ initial, rules = {}, onSave, onDelete, saveLab
         <CategoryPicker type={type} value={chosen} onChange={(c) => { setCategory(c); setTouched(true) }} />
         {touched && description.trim() && (
           <label className="mt-3 flex min-h-11 items-center gap-3 text-sm">
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="h-5 w-5 accent-[#3d8bff]" />
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="h-5 w-5 accent-[#22d3ee]" />
             Always use this for “{prettyMerchant(merchantKey(description))}”
           </label>
         )}

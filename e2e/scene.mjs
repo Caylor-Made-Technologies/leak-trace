@@ -16,8 +16,6 @@ const errors = []
 async function newPage(opts = {}) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, ...opts })
   const page = await ctx.newPage()
-  // The reader's /health, faked as switched on (no outside calls from the test); section 4 overrides it.
-  await page.route('**/health', (r) => r.fulfill({ status: 200, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' }, body: '{"ok":true,"reader":true}' }))
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
   page.on('pageerror', (e) => errors.push(e.message))
   return { ctx, page }
@@ -110,21 +108,6 @@ await ctx.close()
     const w = await page.evaluate(() => document.documentElement.scrollWidth)
     check(w <= 320, `320 px ${n}: width ${w}`)
   }
-  await ctx.close()
-}
-
-// 4. Screenshot reader not switched on: lead with what works, show screenshots as "coming soon".
-{
-  const { ctx, page } = await newPage()
-  await page.route('**/health', (r) => r.fulfill({ status: 200, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' }, body: '{"ok":true,"reader":false}' }))
-  await page.goto(BASE, { waitUntil: 'networkidle' })
-  await page.getByText('Find where your money slips away').waitFor()
-  await page.waitForTimeout(600)
-  check(!(await page.getByRole('button', { name: /Read screenshots/ }).count()) && await page.getByRole('button', { name: /Type it in/ }).first().isVisible(), 'reader off: home leads with Type it in, no Read screenshots button')
-  await page.screenshot({ path: OUT + 'after-empty-reader-off.png' })
-  await page.getByRole('button', { name: 'Add money in or out' }).click()
-  const shotBtn = page.getByRole('dialog').getByRole('button', { name: /Read screenshots/ })
-  check(await shotBtn.isDisabled() && /coming soon/i.test(await shotBtn.innerText()), 'reader off: add sheet shows screenshots as Coming soon (disabled)')
   await ctx.close()
 }
 

@@ -89,11 +89,11 @@ export function GroupDonut({ groups }) {
           </div>
         </div>
       </div>
-      <ul className="flex-1 space-y-2.5">
+      <ul className="min-w-0 flex-1 space-y-2.5">
         {data.map((d) => (
           <li key={d.key} className="flex items-center gap-2 text-sm">
             <span className="inline-block h-3 w-3 shrink-0 rounded-[4px]" style={{ background: d.color }} />
-            <span className="flex-1">
+            <span className="min-w-0 flex-1">
               <span className="font-semibold">{d.label}</span>
               <span className="block text-xs text-faint">{GROUPS[d.key].hint}</span>
             </span>

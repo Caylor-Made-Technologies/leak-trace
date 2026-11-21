@@ -48,6 +48,7 @@ const shot = (n) => page.screenshot({ path: `${SHOTS}/${n}.png` })
 await page.goto(BASE)
 await page.getByText('Find where your money slips away').waitFor()
 check(true, 'empty state shows')
+await page.waitForTimeout(900) // let the entrance fade finish before measuring contrast
 await axe('empty home')
 await shot('01-empty')
 
@@ -77,7 +78,9 @@ if (!LIVE) {
   // Goals
   await tab('Plan')
   await page.getByRole('button', { name: 'New goal' }).click()
-  await page.getByRole('button', { name: /Emergency fund/ }).click()
+  // A goal big enough that one plugged leak makes a visible difference (on a $1,000 goal it's under a
+  // week, and the app rightly doesn't call that "sooner").
+  await page.getByRole('button', { name: /Truck/ }).click()
   await page.getByRole('button', { name: 'Create goal' }).click()
   await page.getByText('Save per week').waitFor()
   const planText = await page.locator('main').innerText()

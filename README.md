@@ -6,6 +6,13 @@ Find where your money slips away. A private, phone-first budgeting app (installa
 
 Add your pay and spending by typing it in, uploading a bank CSV, or snapping screenshots of pay stubs, bank app lists or receipts. The app sorts everything into categories, finds the leaks, and shows how fast you can hit your goals.
 
+<p>
+  <img src="docs/screenshots/after-empty.png" alt="First screen: read screenshots, bank CSV or type it in" width="200">
+  <img src="docs/screenshots/after-home.png" alt="Home: money left over this month and leaks found" width="200">
+  <img src="docs/screenshots/after-leaks-3d.png" alt="Leaks: a 3D pipe run with the biggest leak glowing amber and money flowing toward it" width="200">
+  <img src="docs/screenshots/after-leaks-2d.png" alt="The same pipe run as a flat drawing (Reduce Motion)" width="200">
+</p>
+
 ## Features
 
 | | |
@@ -14,6 +21,7 @@ Add your pay and spending by typing it in, uploading a bank CSV, or snapping scr
 | **Auto-categorize** | 24 categories. Fix one and it remembers that merchant, and updates past ones too |
 | **Dashboard** | Left over this month (count-up number), money in vs. out, income vs. spending chart, needs/wants/saving donut, spending by category, recent activity |
 | **Leak finder** | Recurring subscriptions, possible double charges, small purchases that add up (fast food, gas station snacks, coffee), categories that jumped vs. last month, and fees. Each one says "You spent $X this month, about $Y per year" |
+| **Where it leaks** | The Leaks screen shows a pipe run: every open leak is a joint (bigger drip = more per year), the one in focus glows amber and the flow runs toward it. Tap "Show details" on a leak to light it up. 3D on capable phones (loaded after the screen draws, ~135 KB, draws only while moving); a flat drawing of the same run without WebGL, with Reduce Motion, or on phones with ≤ 4 GB / ≤ 4 cores |
 | **Plug it** | Mark a leak as plugged; the savings flow into your goals |
 | **Goals planner** | Save-per-week and per-month to hit a date, time at your current leftover, how much sooner with plugged leaks, and a "what if I saved extra?" slider |
 | **Invest calculator** | Monthly investing over 5/10/20/30 years at 4%, 7%, 10% example rates, with a chart, table and a clear "educational, not advice" note |
@@ -21,7 +29,7 @@ Add your pay and spending by typing it in, uploading a bank CSV, or snapping scr
 | **Coming up** | Predicts recurring bills and subscriptions due in the next 2 weeks |
 | **Hours of work** | Optional: enter your hourly pay and leaks show as hours of work |
 | **Privacy extras** | Hide-amounts eye button, auto-blur in the app switcher, encrypted backups |
-| **Feel** | Spring animations, swipe-to-delete with undo, confetti on wins, light haptics, dark/light mode. Everything respects the phone's Reduce Motion setting |
+| **Feel** | Short entrance animations, swipe-to-delete with undo, confetti on wins, light haptics. Dark by default (Auto and Light in Settings). Everything respects the phone's Reduce Motion setting |
 
 ## Logo and brand
 
@@ -85,8 +93,10 @@ public/                    icons, theme.js (no-flash theme + frame-buster), _hea
 src/
   main.jsx, App.jsx        entry, header, animated tab screens, bottom nav with + button
   state.jsx                app state (live IndexedDB queries, month, theme, privacy, leaks)
-  db.js                    Dexie database + write hooks that sanitize every transaction
-  index.css                Tailwind theme (navy + brand blue), animations
+  db.js                    Dexie database (versioned schema + upgrades) + write hooks that sanitize every transaction
+  index.css                Tailwind theme on caylor-ui tokens (navy + cyan accent)
+  three/                   PipeRun (drawing + lazy 3D), pipeModel (pure), pipeScene (three.js, own chunk)
+  lib/motion-lite.jsx      small stand-in for the animation library (same API, ~3 KB)
   components/              UI kit (sheets, buttons, money count-up, confetti), charts, rows, forms
   screens/                 Home, Activity, Leaks, Plan (goals + invest), Settings, Add flows
   lib/                     pure logic (unit tested):
@@ -98,8 +108,11 @@ src/
     csv.js, backup.js      CSV import/export, encrypted backups
     image.js, extract.js   screenshot prep + reader client
 worker/                    Cloudflare Worker: the screenshot reader API
-tests/                     unit tests (node --test)
+caylor-ui/                 shared tokens + components (copied; version in caylor-ui/VERSION)
+tests/                     unit tests (node --test), incl. the v1 -> v2 database upgrade
+tests/fixtures/            a database written by the v1 app (for the upgrade test)
 e2e/smoke.mjs              browser test at iPhone size (Playwright + axe)
+e2e/scene.mjs              upgrade in a real browser, pipe scene 3D + drawing, 320 px, screenshots
 wrangler.toml              hosting config for the app (static files on Cloudflare)
 ```
 
@@ -129,8 +142,13 @@ Browser test (uses Playwright and Chromium):
 
 ```bash
 npm run build && npx vite preview --port 4173 &
-BASE_URL=http://localhost:4173/ AXE_PATH=path/to/axe.min.js node e2e/smoke.mjs
+BASE_URL=http://localhost:4173/ AXE_PATH=node_modules/axe-core/axe.min.js PLAYWRIGHT_PATH=$(node -p "require.resolve('playwright')") node e2e/smoke.mjs
+BASE_URL=http://localhost:4173/ node e2e/scene.mjs   # also saves docs/screenshots/after-*.png
 ```
+Add `?3d=1` or `?3d=0` to the URL to force the 3D pipe or the drawing.
+
+### Saved data versions
+IndexedDB schema v1 is what the app wrote at launch. v2 stores each transaction's merchant key (indexed) and adds a `meta` table; the upgrade fills the key in for existing rows and changes nothing else. `tests/migrate.test.js` runs it on a database captured from the real v1 app; `e2e/scene.mjs` does the same in a browser.
 
 ## Deploy
 

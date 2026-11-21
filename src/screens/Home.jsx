@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { useApp } from '../state.jsx'
 import { Button, Card, Money } from '../components/ui.jsx'
 import MonthSwitcher from '../components/MonthSwitcher.jsx'
-import { CategoryBars, GroupDonut, IncomeSpendingChart } from '../components/charts.jsx'
+import { CategoryBars, GroupDonut, IncomeSpendingChart } from '../components/LazyCharts.jsx'
 import { CameraIcon, FileIcon, PenIcon, ShieldIcon, SparkIcon } from '../components/icons.jsx'
 import { byCategory, byGroup, inMonth, monthlySeries, totals } from '../lib/stats.js'
 import { suggestions } from '../lib/insights.js'
@@ -37,7 +37,7 @@ export default function Home({ go, openAdd }) {
     return (
       <div className="space-y-4">
         <Card className="relative overflow-hidden text-center">
-          <div className="mx-auto mt-1 mb-2 flex justify-center drop-shadow-[0_10px_30px_rgba(61,139,255,0.35)]"><Logo size={132} tile={false} title="Money Leak Finder logo" /></div>
+          <div className="mx-auto mt-1 mb-2 flex justify-center drop-shadow-[0_10px_30px_rgba(34,211,238,0.35)]"><Logo size={132} tile={false} title="Money Leak Finder logo" /></div>
           <h2 className="font-display text-2xl font-extrabold">Find where your money slips away</h2>
           <p className="mx-auto mt-2 max-w-xs text-muted">Add your pay and spending. We'll spot the leaks and show how fast you can hit your goals.</p>
           <div className="mt-5 grid gap-2.5">

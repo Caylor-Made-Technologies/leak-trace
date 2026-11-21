@@ -6,12 +6,14 @@ import MonthSwitcher from '../components/MonthSwitcher.jsx'
 import { CheckIcon, ChevronDown, WrenchIcon } from '../components/icons.jsx'
 import { formatMoney } from '../lib/money.js'
 import { equivalents, hoursOfWork } from '../lib/insights.js'
+import PipeRun from '../three/PipeRun.jsx'
 
 const KIND_LABEL = { subscriptions: 'Recurring', duplicate: 'Double charge', small: 'Adds up', jump: 'Jumped', fees: 'Fees' }
 
 export default function Leaks({ go, openAdd }) {
   const { txns, leaks, plugged, togglePlug, pluggedSavings, settings } = useApp()
   const [party, setParty] = useState(false)
+  const [focusId, setFocusId] = useState(null)
   const yearly = leaks.filter((l) => !plugged.has(l.id)).reduce((s, l) => s + l.yearly, 0)
   const open = leaks.filter((l) => !plugged.has(l.id))
   const done = leaks.filter((l) => plugged.has(l.id))
@@ -35,7 +37,7 @@ export default function Leaks({ go, openAdd }) {
   return (
     <div className="space-y-4">
       <MonthSwitcher />
-      <LeakMeter yearly={yearly} count={open.length} saved={pluggedSavings} />
+      <LeakMeter yearly={yearly} count={open.length} saved={pluggedSavings} open={open} focusId={focusId} />
 
       {!leaks.length && (
         <Card>
@@ -45,7 +47,7 @@ export default function Leaks({ go, openAdd }) {
 
       <ul className="space-y-3">
         <AnimatePresence initial={false}>
-          {open.map((l, i) => <LeakCard key={l.id} leak={l} index={i} hourly={settings.hourlyWage} onPlug={() => plug(l.id)} />)}
+          {open.map((l, i) => <LeakCard key={l.id} leak={l} index={i} hourly={settings.hourlyWage} onPlug={() => plug(l.id)} onFocus={() => setFocusId(l.id)} />)}
         </AnimatePresence>
       </ul>
 
@@ -71,49 +73,31 @@ export default function Leaks({ go, openAdd }) {
   )
 }
 
-function LeakMeter({ yearly, count, saved }) {
-  const level = Math.min(1, yearly / 300000)
-  const puddle = 18 + 26 * Math.max(0.15, level)
+function LeakMeter({ yearly, count, saved, open, focusId }) {
+  const focus = open.find((l) => l.id === focusId) ?? (open.length ? open.reduce((a, b) => (b.yearly > a.yearly ? b : a)) : null)
   return (
     <Card className="relative overflow-hidden">
-      <div className="flex items-center gap-4">
-        <div className="relative h-28 w-24 shrink-0" aria-hidden="true">
-          <svg viewBox="0 0 96 112" className="h-full w-full">
-            <defs>
-              <linearGradient id="pipe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9fb2cc" /><stop offset="1" stopColor="#5f7391" /></linearGradient>
-              <radialGradient id="pool" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stopColor="#6aa6ff" /><stop offset="1" stopColor="#1b63eb" /></radialGradient>
-            </defs>
-            <path d="M0 14h46a14 14 0 0 1 14 14v8" fill="none" stroke="url(#pipe)" strokeWidth="12" strokeLinecap="round" />
-            <rect x="50" y="34" width="20" height="8" rx="3" fill="#5f7391" />
-            <rect x="26" y="4" width="10" height="8" rx="2" fill="#5f7391" />
-            <motion.ellipse
-              cx="60" cy="100" ry="7" fill="url(#pool)"
-              initial={{ rx: 0 }} animate={{ rx: count ? puddle : 10, opacity: count ? 1 : 0.35 }}
-              transition={{ type: 'spring', stiffness: 60, damping: 12 }}
-            />
-            {count > 0 && <motion.ellipse cx="60" cy="100" ry="7" fill="none" stroke="#6aa6ff" strokeWidth="1.5" animate={{ rx: [6, puddle + 8], opacity: [0.8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }} />}
-          </svg>
-          {count > 0 && [0, 0.6, 1.2].map((d) => (
-            <span key={d} className="drip absolute top-[38%] h-3 w-2 -translate-x-1/2 rounded-full bg-brand-2" style={{ left: '62.5%', animationDelay: `${d}s` }} />
-          ))}
-          {count === 0 && <span className="absolute left-[52%] top-[30%] text-xl">✨</span>}
-        </div>
+      <PipeRun leaks={open} focusId={focus?.id ?? null} />
+      <div className="mt-3 flex items-end justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-muted">{count ? 'Slipping away, per year' : 'All leaks plugged'}</p>
           <p className="font-display text-4xl font-extrabold tracking-tight text-ink"><Money cents={yearly} /></p>
           <p className="mt-1 text-sm text-muted">{count} open leak{count === 1 ? '' : 's'} this month</p>
-          {saved > 0 && (
-            <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-good/15 px-2.5 py-1 text-xs font-bold text-good">
-              🔧 Plugged: +<Money cents={saved} />/mo
-            </motion.p>
-          )}
         </div>
+        {focus && (
+          <p className="max-w-[45%] text-right text-sm"><span className="block text-xs font-bold uppercase tracking-wider text-warn">Lit up</span><span className="font-semibold">{focus.title}</span></p>
+        )}
       </div>
+      {saved > 0 && (
+        <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-good/15 px-2.5 py-1 text-xs font-bold text-good">
+          🔧 Plugged: +<Money cents={saved} />/mo
+        </p>
+      )}
     </Card>
   )
 }
 
-function LeakCard({ leak: l, index, hourly, onPlug }) {
+function LeakCard({ leak: l, index, hourly, onPlug, onFocus }) {
   const [openDetails, setOpen] = useState(false)
   const eq = equivalents(l.yearly)
   const hours = hoursOfWork(l.monthly, hourly)
@@ -146,7 +130,7 @@ function LeakCard({ leak: l, index, hourly, onPlug }) {
 
       {l.items.length > 0 && (
         <>
-          <button onClick={() => setOpen((o) => !o)} aria-expanded={openDetails} className="mt-1 flex min-h-11 items-center gap-1 text-sm font-semibold text-accent">
+          <button onClick={() => { setOpen((o) => !o); onFocus?.() }} aria-expanded={openDetails} className="mt-1 flex min-h-11 items-center gap-1 text-sm font-semibold text-accent">
             {openDetails ? 'Hide' : 'Show'} details
             <motion.span animate={{ rotate: openDetails ? 180 : 0 }}><ChevronDown size={18} /></motion.span>
           </button>

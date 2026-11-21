@@ -4,26 +4,44 @@ import { sanitizeGoal, sanitizeTxn } from './lib/sanitize.js'
 
 // Everything lives in this browser's IndexedDB. Nothing is sent to a server.
 export const db = new Dexie('money-leak-finder')
+
+// Schema versions. Never edit an old version; add a new one with an upgrade.
+// v1 (launch, Oct 2026): what every install up to the overhaul wrote.
 db.version(1).stores({
   transactions: '++id, date, type, category, source',
   rules: 'merchant',
   goals: '++id, createdAt',
   settings: 'key',
 })
+// v2: each transaction stores its merchant key (indexed), so "apply to every purchase from this place"
+// and duplicate checks don't scan everything; a meta table records the schema version and when the
+// upgrade ran. No field is removed or changed.
+export const SCHEMA_VERSION = 2
+db.version(2).stores({
+  transactions: '++id, date, type, category, source, merchant',
+  meta: 'key',
+}).upgrade(async (tx) => {
+  await tx.table('transactions').toCollection().modify((t) => { t.merchant = merchantKey(t.description || '') })
+  await tx.table('meta').put({ key: 'schema', value: 2, upgradedFrom: 1, at: Date.now() })
+})
+db.on('populate', (tx) => tx.table('meta').put({ key: 'schema', value: SCHEMA_VERSION, at: Date.now() }))
 
 // Last line of defense: anything written to transactions is cleaned and masked,
 // even if a future code path forgets to.
 db.transactions.hook('creating', (_pk, obj) => {
   const clean = sanitizeTxn(obj)
   if (!clean) throw new Error('Invalid transaction')
+  clean.merchant = merchantKey(clean.description)
   for (const k of Object.keys(obj)) if (!(k in clean) && k !== 'id') delete obj[k]
   Object.assign(obj, clean)
 })
 db.transactions.hook('updating', (mods, _pk, obj) => {
   const clean = sanitizeTxn({ ...obj, ...mods })
   if (!clean) throw new Error('Invalid transaction')
+  clean.merchant = merchantKey(clean.description)
   const out = {}
   for (const k of Object.keys(mods)) out[k] = clean[k]
+  if ('description' in mods) out.merchant = clean.merchant
   return out
 })
 
@@ -68,7 +86,7 @@ export async function recategorize(txn, category, remember = true) {
     if (!remember) return
     const key = merchantKey(txn.description)
     await db.rules.put({ merchant: key, category })
-    const same = await db.transactions.where('type').equals(txn.type).filter((t) => merchantKey(t.description) === key).toArray()
+    const same = await db.transactions.where('merchant').equals(key).filter((t) => t.type === txn.type).toArray()
     for (const t of same) if (t.category !== category) await db.transactions.update(t.id, { category })
   })
 }

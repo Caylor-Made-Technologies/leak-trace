@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Sheet } from '../components/ui.jsx'
@@ -5,8 +6,9 @@ import { CameraIcon, ChevronLeft, FileIcon, PenIcon } from '../components/icons.
 import { addTransactions, getRules, recategorize } from '../db.js'
 import { useApp } from '../state.jsx'
 import TxnForm from '../components/TxnForm.jsx'
-import CsvImport from './add/CsvImport.jsx'
-import ScreenshotImport from './add/ScreenshotImport.jsx'
+// CSV and screenshot import load only when chosen (CSV parsing and image code stay off the first screen).
+const CsvImport = lazy(() => import('./add/CsvImport.jsx'))
+const ScreenshotImport = lazy(() => import('./add/ScreenshotImport.jsx'))
 import { db } from '../db.js'
 
 const MODES = [
@@ -57,8 +59,10 @@ export default function AddSheet({ open, mode, setMode, onClose }) {
           <motion.div key={mode} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
             <button onClick={() => setMode(null)} className="-ml-2 mb-2 flex min-h-11 items-center gap-1 px-2 text-sm font-semibold text-accent"><ChevronLeft size={18} /> Other ways</button>
             {mode === 'manual' && <TxnForm rules={rules} onSave={saveManual} saveLabel="Add it" />}
-            {mode === 'csv' && <CsvImport onDone={onClose} />}
-            {mode === 'screenshot' && <ScreenshotImport onDone={onClose} />}
+            <Suspense fallback={<div className="skeleton" style={{ height: 240 }} role="status" aria-label="Loading" />}>
+              {mode === 'csv' && <CsvImport onDone={onClose} />}
+              {mode === 'screenshot' && <ScreenshotImport onDone={onClose} />}
+            </Suspense>
           </motion.div>
         )}
       </AnimatePresence>

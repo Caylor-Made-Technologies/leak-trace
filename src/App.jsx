@@ -124,7 +124,7 @@ function Shell() {
                 aria-current={tab === t.id ? 'page' : undefined}
                 className={`relative flex min-h-14 w-full flex-col items-center justify-center gap-0.5 rounded-2xl text-[11px] font-semibold transition-colors ${tab === t.id ? 'text-accent' : 'text-faint'}`}
               >
-                {tab === t.id && <motion.span layoutId="tabGlow" className="absolute inset-x-3 top-0 h-[3px] rounded-full bg-brand-2 shadow-[0_0_12px_2px_rgba(61,139,255,0.7)]" transition={spring} />}
+                {tab === t.id && <motion.span layoutId="tabGlow" className="absolute inset-x-3 top-0 h-[3px] rounded-full bg-brand-2 shadow-[0_0_12px_2px_rgba(34,211,238,0.7)]" transition={spring} />}
                 <motion.span animate={{ y: tab === t.id ? -2 : 0, scale: tab === t.id ? 1.12 : 1 }} transition={spring} className="relative">
                   <t.Icon size={23} />
                   {t.id === 'leaks' && openLeaks > 0 && (

@@ -88,7 +88,7 @@ export default function CsvImport({ onDone }) {
             {rows.length > 8 && <li className="px-3 py-2 text-xs text-faint">…and {rows.length - 8} more</li>}
           </ul>
           <label className="flex min-h-11 items-center gap-3 text-sm">
-            <input type="checkbox" checked={flip} onChange={(e) => setFlip(e.target.checked)} className="h-5 w-5 accent-[#3d8bff]" />
+            <input type="checkbox" checked={flip} onChange={(e) => setFlip(e.target.checked)} className="h-5 w-5 accent-[#22d3ee]" />
             Money in and out look backwards? Swap them.
           </label>
           <Button className="w-full" onClick={save} disabled={busy || !rows.length}>{busy ? 'Saving…' : `Import ${rows.length} transactions`}</Button>

@@ -3,45 +3,43 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Button, inputClass } from '../../components/ui.jsx'
 import { CameraIcon, LockIcon } from '../../components/icons.jsx'
 import { XIcon } from '../../components/ui.jsx'
-import { MAX_IMAGES, prepareImage } from '../../lib/image.js'
-import { extractFromImages, extractionEnabled } from '../../lib/extract.js'
-import { addWithoutDuplicates, setSetting } from '../../db.js'
-import Policy from '../../components/Policy.jsx'
+import { MAX_IMAGES, imageProblem } from '../../lib/image.js'
+import { readScreenshots, releaseReader } from '../../lib/ocr.js'
+import { addWithoutDuplicates } from '../../db.js'
 import { useApp } from '../../state.jsx'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../lib/categories.js'
 import { categorize } from '../../lib/categorize.js'
 import { parseAmount, formatMoney } from '../../lib/money.js'
 import { isValidISO } from '../../lib/dates.js'
 
-const READING = ['Reading your screenshots…', 'Finding dates and amounts…', 'Hiding any account numbers…', 'Sorting money in and out…', 'Almost done…']
+// What the reader is doing, in plain words (tesseract.js status -> message).
+function stepText(p) {
+  if (!p) return 'Getting ready…'
+  if (/load|initializ/i.test(p.stage || '')) return 'Getting the reader ready (first time takes a few seconds)…'
+  if (p.stage === 'preparing') return p.of > 1 ? `Screenshot ${p.image} of ${p.of}: getting it ready…` : 'Getting it ready…'
+  const pct = Math.round((p.progress || 0) * 100)
+  return p.of > 1 ? `Reading screenshot ${p.image} of ${p.of}… ${pct}%` : `Reading your screenshot… ${pct}%`
+}
 
 export default function ScreenshotImport({ onDone }) {
-  const { showToast, setMonth, settings } = useApp()
-  const agreedAt = settings.screenshotConsent
-  const [agree, setAgree] = useState(false)
-  const [showPolicy, setShowPolicy] = useState(false)
+  const { showToast, setMonth } = useApp()
   const [images, setImages] = useState([]) // { id, file, url } — memory only, never saved
   const [step, setStep] = useState('pick') // pick | reading | review
   const [rows, setRows] = useState([])
   const [info, setInfo] = useState(null)
   const [error, setError] = useState('')
-  const [msg, setMsg] = useState(0)
+  const [progress, setProgress] = useState(null)
   const abort = useRef(null)
   const input = useRef(null)
   const imagesRef = useRef(images)
   imagesRef.current = images
 
-  // Free the images from memory when leaving this screen.
+  // Free the images and the reader from memory when leaving this screen.
   useEffect(() => () => {
     abort.current?.abort()
     imagesRef.current.forEach((i) => URL.revokeObjectURL(i.url))
+    releaseReader()
   }, [])
-
-  useEffect(() => {
-    if (step !== 'reading') return
-    const t = setInterval(() => setMsg((m) => (m + 1) % READING.length), 1800)
-    return () => clearInterval(t)
-  }, [step])
 
   const clearImages = () => {
     imagesRef.current.forEach((i) => URL.revokeObjectURL(i.url))
@@ -50,8 +48,11 @@ export default function ScreenshotImport({ onDone }) {
 
   const addFiles = (files) => {
     setError('')
-    const list = [...(files || [])].slice(0, MAX_IMAGES - images.length)
-    if (files?.length > list.length) setError(`Up to ${MAX_IMAGES} screenshots at a time.`)
+    const picked = [...(files || [])]
+    const bad = picked.map(imageProblem).find(Boolean)
+    const list = picked.filter((f) => !imageProblem(f)).slice(0, MAX_IMAGES - images.length)
+    if (bad) setError(bad)
+    else if (picked.length > list.length) setError(`Up to ${MAX_IMAGES} screenshots at a time.`)
     setImages((prev) => [...prev, ...list.map((file) => ({ id: crypto.randomUUID(), file, url: URL.createObjectURL(file) }))])
     if (input.current) input.current.value = ''
   }
@@ -65,19 +66,12 @@ export default function ScreenshotImport({ onDone }) {
   }
 
   const read = async () => {
-    if (!agreedAt) {
-      if (!agree) return setError('Please check the box to agree first.')
-      await setSetting('screenshotConsent', Date.now())
-    }
     setError('')
     setStep('reading')
-    setMsg(0)
+    setProgress(null)
     abort.current = new AbortController()
     try {
-      const prepared = []
-      for (const img of images) prepared.push(await prepareImage(img.file))
-      const res = await extractFromImages(prepared, { signal: abort.current.signal })
-      prepared.length = 0
+      const res = await readScreenshots(images.map((i) => i.file), { onStep: setProgress, signal: abort.current.signal })
       setInfo(res)
       setRows(res.rows.map((r) => ({ ...r, category: r.category || categorize(r), amountText: (r.amount / 100).toFixed(2) })))
       setStep('review')
@@ -85,7 +79,10 @@ export default function ScreenshotImport({ onDone }) {
       clearImages()
     } catch (e) {
       if (abort.current?.signal.aborted) return
-      setError(e.message || 'Something went wrong.')
+      // Most likely: the reader couldn't download (first use with no signal).
+      setError(navigator.onLine === false
+        ? 'The reader downloads once (about 4 MB) the first time. Connect to the internet, then try again. After that it works offline.'
+        : 'Couldn’t read that screenshot. Try a clearer one, or type it in.')
       setStep('pick')
     }
   }
@@ -103,15 +100,6 @@ export default function ScreenshotImport({ onDone }) {
     if (added) setMonth(ready.reduce((a, r) => (r.date > a ? r.date : a), '0000').slice(0, 7))
     showToast(`Saved ${added}${duplicates ? ` · ${duplicates} already saved` : ''}. Screenshots deleted.`)
     onDone()
-  }
-
-  if (!extractionEnabled()) {
-    return (
-      <div className="rounded-2xl bg-card-2 p-4 text-sm text-muted">
-        <p className="font-semibold text-ink">Screenshot reading isn’t switched on in this copy yet.</p>
-        <p className="mt-1">The app owner needs to deploy the secure reader (see the README). Until then, use a bank CSV or type it in.</p>
-      </div>
-    )
   }
 
   return (
@@ -147,21 +135,10 @@ export default function ScreenshotImport({ onDone }) {
             )}
             <div className="flex gap-3 rounded-2xl bg-card-2 p-3 text-sm text-muted">
               <LockIcon size={20} className="mt-0.5 shrink-0 text-good" />
-              <p>Screenshots are shrunk and stripped of location data on your phone, read once, then deleted. They’re never saved. Card and account numbers are hidden (last 4 at most).</p>
+              <p>Read <strong className="text-ink">on your phone</strong>. Nothing is sent anywhere, and screenshots are never saved. Card and account numbers are hidden (last 4 at most). You check every row before it’s saved.</p>
             </div>
-            {!agreedAt ? (
-              <div className="rounded-2xl border border-line bg-card p-3 text-sm">
-                <label className="flex min-h-11 items-start gap-3">
-                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-6 w-6 shrink-0 accent-[#22d3ee]" />
-                  <span>I’m 18 or older, I agree to the <button type="button" className="font-semibold text-accent underline" onClick={() => setShowPolicy((v) => !v)}>Terms and Privacy Policy</button>, and I’m OK with these screenshots being sent to be read (then deleted).</span>
-                </label>
-                {showPolicy && <div className="mt-2"><Policy startOpen /></div>}
-              </div>
-            ) : (
-              <p className="text-xs text-faint">You agreed to the terms on {new Date(agreedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.</p>
-            )}
             {error && <p role="alert" className="rounded-xl bg-bad/15 p-3 text-sm font-semibold text-bad">{error}</p>}
-            <Button className="w-full" disabled={!images.length || (!agreedAt && !agree)} onClick={read}>Read {images.length || ''} screenshot{images.length === 1 ? '' : 's'}</Button>
+            <Button className="w-full" disabled={!images.length} onClick={read}>Read {images.length || ''} screenshot{images.length === 1 ? '' : 's'}</Button>
           </motion.div>
         )}
 
@@ -176,7 +153,7 @@ export default function ScreenshotImport({ onDone }) {
               ))}
             </div>
             <AnimatePresence mode="wait">
-              <motion.p key={msg} className="mt-6 font-semibold" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} aria-live="polite">{READING[msg]}</motion.p>
+              <motion.p key={progress?.image || 0} className="mt-6 font-semibold" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} aria-live="polite">{stepText(progress)}</motion.p>
             </AnimatePresence>
             <Button variant="ghost" className="mt-6" onClick={() => { abort.current?.abort(); setStep('pick') }}>Cancel</Button>
           </motion.div>
@@ -186,7 +163,7 @@ export default function ScreenshotImport({ onDone }) {
           <motion.div key="review" className="space-y-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
             <div className="rounded-2xl bg-card-2 p-3 text-sm">
               <p className="font-semibold">Found {rows.length} item{rows.length === 1 ? '' : 's'}. Check them before saving.</p>
-              <p className="mt-0.5 text-muted">Fix anything that’s off. Uncheck anything you don’t want. Your screenshots are already deleted.</p>
+              <p className="mt-0.5 text-muted">Read on your phone. Fix anything that’s off and uncheck anything you don’t want. Your screenshots are already deleted.</p>
               {(info?.masked || rows.some((r) => r.hadNumber)) && <p className="mt-1.5 text-good">🔒 Account or card numbers were hidden.</p>}
             </div>
             {!rows.length && <p className="py-6 text-center text-muted">No transactions found. Try a clearer screenshot, or type them in.</p>}

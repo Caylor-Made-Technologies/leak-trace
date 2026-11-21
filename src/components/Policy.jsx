@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ChevronDown, ShieldIcon } from './icons.jsx'
 
-// Privacy policy + terms. Shown in Settings and next to the screenshot consent box.
+// Privacy policy + terms. Shown in Settings.
 export default function Policy({ startOpen = false }) {
   const [open, setOpen] = useState(startOpen)
   return (
@@ -25,10 +25,10 @@ export default function Policy({ startOpen = false }) {
               <p className="rounded-xl bg-warn/10 p-2 text-xs text-warn">Template. Last updated October 22, 2026. Not yet reviewed by an attorney.</p>
               <h4 className="font-bold text-ink">Privacy policy</h4>
               <p><strong>What’s collected:</strong> only what you enter: dates, descriptions, amounts, categories, goals and optional hourly pay. It is saved in your browser’s storage (IndexedDB) on this device. Caylor Made Technologies does not receive or store it.</p>
-              <p><strong>Screenshots:</strong> if you use “Read screenshots,” the pictures are shrunk and stripped of location data on your phone, then sent over an encrypted connection to our reader service (a Cloudflare Worker) and on to an AI service (Anthropic) to pull out the transactions. Our reader does not save the images or the results, and images are deleted from the app once you save. Anthropic processes the request under its commercial terms and may keep it for a limited time for abuse monitoring. Don’t upload pictures of IDs or full statements you don’t want processed.</p>
+              <p><strong>Screenshots:</strong> if you use “Read screenshots,” the pictures are read on your phone by a text reader built into the app (Tesseract, open source). They are not sent anywhere, not saved, and are cleared from memory once you save or leave the screen. The reader itself is downloaded from this app’s own site the first time you use it, then kept on your phone so it works offline.</p>
               <p><strong>Sensitive numbers:</strong> full card, account, routing and Social Security numbers are automatically hidden (last 4 digits at most) before anything is saved.</p>
               <p><strong>Cookies & tracking:</strong> none. We use your browser’s local storage only to remember your data and settings on this device.</p>
-              <p><strong>Third parties:</strong> Cloudflare (hosts the reader) and Anthropic (reads screenshots) only when you use screenshot reading. Fonts are bundled with the app.</p>
+              <p><strong>Third parties:</strong> none. The app is hosted on Cloudflare, which serves its files; nothing you enter is sent to anyone. Fonts and the screenshot reader are bundled with the app.</p>
               <p><strong>Your control:</strong> export, back up, or delete everything at any time in Settings. Deleting the app’s website data also erases it. Because we never receive your data, we have nothing stored to delete; for any question or request, we respond within 45 days.</p>
               <p><strong>Children:</strong> this app is for adults 18+ and is not directed at children under 13.</p>
               <h4 className="pt-1 font-bold text-ink">Terms of use</h4>

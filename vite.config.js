@@ -14,7 +14,8 @@ function csp(apiUrl) {
   }
   const policy = [
     "default-src 'self'",
-    "script-src 'self'",
+    // 'wasm-unsafe-eval' lets the on-device screenshot reader (WebAssembly) run. It does not allow eval().
+    "script-src 'self' 'wasm-unsafe-eval'",
     "style-src 'self'",
     "img-src 'self' blob: data:",
     "font-src 'self'",
@@ -86,8 +87,14 @@ export default defineConfig(({ mode }) => {
         workbox: {
           globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
           // The 3D chunk isn't precached (weak phones never load it); it's cached the first time it's used.
-          globIgnores: ['**/pipeScene-*.js'],
-          runtimeCaching: [{ urlPattern: /\/assets\/pipeScene-.*\.js$/, handler: 'CacheFirst', options: { cacheName: 'scene-3d', expiration: { maxEntries: 2 } } }],
+          // Not precached (only some people use them): the 3D chunk and the screenshot reader (~4 MB compressed).
+          // Each is cached the first time it's used, so it then works offline.
+          globIgnores: ['**/pipeScene-*.js', 'ocr/**', 'licenses/**'],
+          runtimeCaching: [
+            { urlPattern: /\/assets\/pipeScene-.*\.js$/, handler: 'CacheFirst', options: { cacheName: 'scene-3d', expiration: { maxEntries: 2 } } },
+            { urlPattern: /\/ocr\/.*$/, handler: 'CacheFirst', options: { cacheName: 'reader-v7', expiration: { maxEntries: 8 } } },
+          ],
+          maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
           navigateFallback: 'index.html',
           cleanupOutdatedCaches: true,
         },

@@ -1,5 +1,4 @@
 import { lazy, Suspense } from 'react'
-import { useReaderStatus } from '../lib/readerStatus.js'
 import { AnimatePresence, motion } from 'motion/react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Sheet } from '../components/ui.jsx'
@@ -22,7 +21,6 @@ export default function AddSheet({ open, mode, setMode, onClose }) {
   const { showToast, setMonth } = useApp()
   const rules = useLiveQuery(getRules, [], {})
   const title = mode ? MODES.find((m) => m.id === mode).title : 'Add money in or out'
-  const reader = useReaderStatus()
 
   const saveManual = async (data, { remember }) => {
     const n = await addTransactions([{ ...data, source: 'manual' }])
@@ -40,27 +38,21 @@ export default function AddSheet({ open, mode, setMode, onClose }) {
       <AnimatePresence mode="wait" initial={false}>
         {!mode ? (
           <motion.ul key="menu" className="space-y-2.5 pb-2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            {MODES.map((m, i) => {
-              // Screenshot reading not switched on yet: shown, but as "coming soon", not as a button that fails later.
-              const soon = m.id === 'screenshot' && reader === 'off'
-              return (
+            {MODES.map((m, i) => (
               <motion.li key={m.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
                 <motion.button
-                  whileTap={soon ? undefined : { scale: 0.97 }}
-                  onClick={() => !soon && setMode(m.id)}
-                  disabled={soon}
-                  aria-disabled={soon || undefined}
-                  className={`flex w-full items-center gap-4 rounded-3xl border border-line bg-card p-4 text-left ${soon ? 'cursor-not-allowed opacity-70' : ''}`}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setMode(m.id)}
+                  className="flex w-full items-center gap-4 rounded-3xl border border-line bg-card p-4 text-left"
                 >
                   <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-2 to-brand text-white shadow-[0_8px_20px_-8px_rgba(27,99,235,0.9)]"><m.Icon size={26} /></span>
                   <span className="flex-1">
-                    <span className="flex items-center gap-2 font-bold">{m.title}{(soon ? 'Coming soon' : m.badge) && <span className="rounded-full bg-brand/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">{soon ? 'Coming soon' : m.badge}</span>}</span>
+                    <span className="flex items-center gap-2 font-bold">{m.title}{m.badge && <span className="rounded-full bg-brand/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">{m.badge}</span>}</span>
                     <span className="block text-sm text-muted">{m.text}</span>
                   </span>
                 </motion.button>
               </motion.li>
-              )
-            })}
+            ))}
             <li className="px-1 pt-1 text-xs text-faint">🔒 Never enter bank logins, full account or card numbers, routing numbers or SSNs. We never ask for them.</li>
           </motion.ul>
         ) : (

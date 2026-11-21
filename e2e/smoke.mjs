@@ -96,7 +96,7 @@ if (!LIVE) {
 
 // Manual entry with a card number + XSS attempt
 await page.getByRole('button', { name: 'Add money in or out' }).click()
-await page.getByRole('button', { name: /Type it in/ }).click()
+await page.getByRole('dialog').getByRole('button', { name: /Type it in/ }).click() // the empty home screen has one too
 await page.locator('#amt').fill('12.34')
 await page.locator('#desc').fill('<img src=x onerror="window.__pwned=1"> card 4111 1111 1111 4242')
 await page.getByText(/looks like an account or card number/).waitFor()

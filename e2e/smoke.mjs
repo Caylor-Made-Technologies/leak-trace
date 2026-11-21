@@ -48,6 +48,7 @@ const shot = (n) => page.screenshot({ path: `${SHOTS}/${n}.png` })
 await page.goto(BASE)
 await page.getByText('Find where your money slips away').waitFor()
 check(true, 'empty state shows')
+await page.waitForTimeout(900) // let the entrance fade finish before measuring contrast
 await axe('empty home')
 await shot('01-empty')
 

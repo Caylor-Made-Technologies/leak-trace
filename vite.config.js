@@ -42,6 +42,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   return {
     base: './',
+    // The app was written against the `motion` library; a small local stand-in keeps the same API
+    // at ~3 KB instead of 46 KB gzip (see src/lib/motion-lite.jsx).
+    resolve: { alias: { 'motion/react': new URL('./src/lib/motion-lite.jsx', import.meta.url).pathname } },
     build: {
       sourcemap: false,
       target: 'es2022',
@@ -50,8 +53,6 @@ export default defineConfig(({ mode }) => {
         output: {
           advancedChunks: {
             groups: [
-              { name: 'charts', test: /node_modules[\\/](recharts|d3-|victory-vendor|es-toolkit|immer|reselect|@reduxjs|react-redux|decimal\.js)/ },
-              { name: 'motion', test: /node_modules[\\/](motion|framer-motion|motion-dom|motion-utils)/ },
               { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
             ],
           },
@@ -84,6 +85,9 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+          // The 3D chunk isn't precached (weak phones never load it); it's cached the first time it's used.
+          globIgnores: ['**/pipeScene-*.js'],
+          runtimeCaching: [{ urlPattern: /\/assets\/pipeScene-.*\.js$/, handler: 'CacheFirst', options: { cacheName: 'scene-3d', expiration: { maxEntries: 2 } } }],
           navigateFallback: 'index.html',
           cleanupOutdatedCaches: true,
         },
